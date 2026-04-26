@@ -1,0 +1,78 @@
+---
+import Layout from '../layouts/MainLayout.astro';
+---
+
+<Layout title="Fragend schreite ich voran" description="Zitat - Valentime.space">
+  <main class="container">
+    <h1>Fragend schreite ich voran</h1>
+    <p class="quote-source">("preguntando caminamos" - Zapatista de Liberación Nacionál)</p>
+    <p class="context">an den Rändern von Institutionen, in der freien Szene zwischen Altstetten und Bröllin.</p>
+    <p class="context">Resistance, Care und Vernetzung an sich ist bereits ein Full-Time Job. Daneben liebe ich es, mit Jugendlichen zu gestalten - und Videomaterial zu generieren.</p>
+    <p class="context">CV? -> auf Anfrage.</p>
+   </main>
+</Layout>
+
+<style>
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+  }
+
+  h1 {
+    color: #ffffff;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .quote-source {
+    color: #a0a0a0;
+    font-size: clamp(0.9rem, 3vw, 1.2rem);
+    font-style: italic;
+    text-align: center;
+    margin-bottom: 2rem;
+    opacity: 0.8;
+  }
+
+  .context {
+    color: #cccccc;
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    line-height: 1.6;
+    text-align: center;
+    max-width: 700px;
+  }
+
+  .context:last-of-type {
+    margin-bottom: 2rem;
+  }
+
+  .video-container {
+    margin: 1rem 0;
+  }
+
+  .video {
+    max-width: 100%;
+    height: auto;
+    width: clamp(24rem, 72vw, 48rem);
+    display: block;
+    margin: 0 auto;
+    border-radius: 8px;
+  }
+
+  .video-caption {
+    color: #a0a0a0;
+    font-size: clamp(0.8rem, 2.5vw, 1rem);
+    text-align: center;
+    opacity: 0.7;
+    margin-top: 0.5rem;
+  }
+</style>

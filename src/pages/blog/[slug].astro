@@ -1,0 +1,162 @@
+---
+import Layout from '../../layouts/MainLayout.astro';
+import { readFileSync } from 'fs';
+import { glob } from 'glob';
+import { join } from 'path';
+import frontMatter from 'front-matter';
+import { marked } from 'marked';
+
+export function getStaticPaths() {
+  const blogDir = join(import.meta.dirname, '../../../blog/entries');
+  const mdFiles = glob.sync(join(blogDir, '*.md'));
+  const posts = mdFiles.map(file => {
+    const content = readFileSync(file, 'utf-8');
+    const fm = frontMatter(content);
+    const slug = file.split('/').pop()?.replace('.md', '');
+    return { slug, ...fm.attributes, content: fm.body };
+  });
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const htmlContent = marked(post.content);
+
+// Get all posts for prev/next navigation
+const blogDir = join(import.meta.dirname, '../../../blog/entries');
+const mdFiles = glob.sync(join(blogDir, '*.md'));
+const allPosts = mdFiles.map(file => {
+  const content = readFileSync(file, 'utf-8');
+  const fm = frontMatter(content);
+  const slug = file.split('/').pop()?.replace('.md', '');
+  return { slug, ...fm.attributes, content: fm.body };
+});
+
+const postIndex = allPosts.findIndex(p => p.slug === post.slug);
+const prevPost = postIndex > 0 ? allPosts[postIndex - 1] : null;
+const nextPost = postIndex < allPosts.length - 1 ? allPosts[postIndex + 1] : null;
+---
+
+<Layout title={post.title} description={post.excerpt}>
+  <main class="container">
+    <article class="blog-post">
+      <header>
+        <h1>{post.title}</h1>
+        <p class="meta">{new Date(post.date).toLocaleDateString()}</p>
+      </header>
+
+      <div class="content" set:html={htmlContent} />
+
+      <nav class="post-nav">
+        {prevPost && <a href={`/blog/${prevPost.slug}`}>&larr; {prevPost.title}</a>}
+        {nextPost && <a href={`/blog/${nextPost.slug}`}>{nextPost.title} &rarr;</a>}
+      </nav>
+
+      <div class="back-link">
+        <a href="/blog">Back to Blog</a>
+      </div>
+    </article>
+  </main>
+</Layout>
+
+<style>
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  h1 {
+    color: #e0e0e0;
+    margin-bottom: 1rem;
+  }
+
+  .meta {
+    color: #aaa;
+    font-style: italic;
+  }
+
+  .content :global(h2) {
+    margin-top: 2rem;
+    color: #e0e0e0;
+    border-bottom: 1px solid #333;
+    padding-bottom: 0.5rem;
+  }
+
+  .content :global(p) {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    color: #ccc;
+  }
+
+  .content :global(pre) {
+    background: #2a2a2a;
+    padding: 1rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    border: 1px solid #333;
+  }
+
+  .content :global(code) {
+    font-family: monospace;
+    background: #1a1a1a;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    color: #e0e0e0;
+  }
+
+  .content :global(a) {
+    color: #646cff;
+  }
+
+  .content :global(.blog-video) {
+    max-width: 100%;
+    height: auto;
+    width: clamp(24rem, 72vw, 48rem);
+    display: block;
+    margin: 2rem auto;
+    border-radius: 8px;
+  }
+
+  .content :global(.video-caption) {
+    color: #a0a0a0;
+    font-size: clamp(0.8rem, 2.5vw, 1rem);
+    text-align: center;
+    opacity: 0.7;
+    margin-top: 0.5rem;
+  }
+
+  .post-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #333;
+  }
+
+  .post-nav a {
+    color: #646cff;
+    text-decoration: none;
+  }
+
+  .back-link {
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  .back-link a {
+    color: #aaa;
+    text-decoration: none;
+  }
+
+  .back-link a:hover {
+    color: #646cff;
+  }
+</style>

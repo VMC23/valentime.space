@@ -1,0 +1,160 @@
+---
+import Layout from '../layouts/MainLayout.astro';
+
+const title = "Video & Vermittlung";
+const description = "Video & Vermittlung";
+---
+
+<Layout title={title} description={description}>
+  <main class="container">
+    <div class="title-wrapper">
+      <h1 class="main-title">Video & Vermittlung</h1>
+    </div>
+
+    <!-- ResistanceIsKey -->
+    <div class="video-container">
+      <video src="/ResistanceIsKey.mp4" autoplay loop muted playsinline class="video"></video>
+    </div>
+    <p class="video-caption">Zurich, 2026.</p>
+
+    <!-- Decolonial Website Vid -->
+    <div class="video-container">
+      <div class="video-text-caption">
+        <p>Vermittlung & (Live-)Kamera in Offspaces, Schulen, Universitäten, Museen, Festivals.</p>
+      </div>
+      <video src="/Decolonial Website Vid.mov" autoplay loop muted playsinline class="video"></video>
+      <p class="video-text-caption" style="margin-top: 3rem;">Performance und Video, Diversity Politics and the Arts: Post-colonial Perspectives, 2026.</p>
+    </div>
+
+    <!-- Moods Video -->
+    <div class="video-container" style="margin-top: 2rem;">
+      <video src="/Moods_Video.mp4" autoplay loop muted playsinline class="video"></video>
+      <p class="video-text-caption">Ali Dada, Moods, 2025.</p>
+    </div>
+
+    <!-- Blob Berlin Video -->
+    <div class="video-container">
+      <video src="/Blob Berlin Video.mp4" autoplay loop muted playsinline class="video"></video>
+      <p class="video-text-caption">Blob, hergestellt mit den Besucher:innen auf der documenta fifteen, mit: Kollektiv Loom Loop.<br>Video: Berlin, 2023.</p>
+    </div>
+
+    <div class="slideshow-container">
+      <div class="slideshow">
+        <img src="/220930_WDC_BadHomburg_ValentineBrasser_6388.jpg" alt="WDC Photo 1" class="slide active">
+        <img src="/220930_WDC_BadHomburg_ValentineBrasser_6422-1.jpg" alt="WDC Photo 2" class="slide">
+        <img src="/WDC_Tour-3_Valentinebrasser.png" alt="WDC Photo 3" class="slide">
+      </div>
+      <p class="video-text-caption">Vermittlung und Fotografie: Design for Democracy, Frankfurt 2022.</p>
+    </div>
+
+  </main>
+</Layout>
+
+<style>
+  .container {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 6rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: transparent;
+  }
+
+  .title-wrapper {
+    margin-bottom: 2rem;
+  }
+
+.main-title {
+  font-size: clamp(2.8rem, 6.4vw, 5.6rem);
+  font-weight: normal;
+  line-height: 1.1;
+  text-align: center;
+  letter-spacing: 0.2em;
+  color: #ffffff;
+}
+
+.video-container {
+  margin: 2rem 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.video {
+  max-width: 100%;
+  height: auto;
+  width: clamp(30.8rem, 68vw, 61.6rem);
+  display: block;
+  margin: 0 auto;
+  border-radius: 16px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+  transition: transform 0.3s ease;
+  background-color: #000;
+}
+
+.video:hover {
+  transform: scale(1.01);
+}
+
+.video-caption {
+  color: #aaa;
+  font-size: clamp(0.8rem, 2vw, 1rem);
+  text-align: center;
+  opacity: 0.7;
+  margin-top: 1rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.video-text-caption {
+  color: #00d2ff;
+  font-size: clamp(1rem, 3vw, 1.4rem);
+  line-height: 1.6;
+  text-align: center;
+  max-width: 700px;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.video-text-caption p {
+  margin: 0;
+  text-align: center;
+}
+
+.slideshow-container {
+  margin: 4rem 0;
+  width: clamp(30.8rem, 68vw, 61.6rem);
+  position: relative;
+}
+
+.slideshow {
+  position: relative;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.slide.active {
+  opacity: 1;
+}
+
+</style>

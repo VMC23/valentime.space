@@ -1,0 +1,83 @@
+---
+import Layout from '../../layouts/MainLayout.astro';
+import { readFileSync } from 'fs';
+import { glob } from 'glob';
+import { join } from 'path';
+import frontMatter from 'front-matter';
+
+const blogDir = join(import.meta.dirname, '../../../blog/entries');
+const mdFiles = glob.sync(join(blogDir, '*.md'));
+
+const posts = mdFiles.map(file => {
+  const content = readFileSync(file, 'utf-8');
+  const fm = frontMatter(content);
+  const slug = file.split('/').pop()?.replace('.md', '');
+  return {
+    slug,
+    ...fm.attributes
+  };
+}).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+---
+
+<Layout title="Blog" description="My Astro + Vue blog">
+  <main class="container">
+    <h1>Blog Posts</h1>
+
+    <section class="posts">
+      {posts.map(post => (
+        <article class="post">
+          <h2>{post.title}</h2>
+          <p class="meta">{new Date(post.date).toLocaleDateString()}</p>
+          <div class="content">{post.excerpt}</div>
+        </article>
+      ))}
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  h1 {
+    text-align: center;
+    color: #e0e0e0;
+    margin-bottom: 2rem;
+  }
+
+  .posts {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .post {
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #333;
+  }
+
+  .post:last-child {
+    border-bottom: none;
+  }
+
+  h2 {
+    margin: 0 0 0.5rem;
+    color: #ffffff;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .meta {
+    color: #aaa;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  .content {
+    color: #ccc;
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+</style>

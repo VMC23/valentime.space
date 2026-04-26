@@ -1,0 +1,24 @@
+{
+  "name": "valentime.space",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "lint": "eslint ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@astrojs/vue": "^4.5.3",
+    "astro": "^4.16.19",
+    "front-matter": "^4.0.2",
+    "glob": "^13.0.6",
+    "gsap": "^3.14.2",
+    "marked": "^17.0.4",
+    "vue": "^3.5.30"
+  }
+}

@@ -1,0 +1,94 @@
+---
+import Layout from '../layouts/MainLayout.astro';
+import Counter from '../components/Counter.vue';
+---
+
+<Layout title="Vue Demo" description="A demo of Vue components in Astro">
+  <main class="container">
+    <h1>Vue Component Demo</h1>
+    <p>This page demonstrates a Vue component integrated into an Astro page.</p>
+
+    <section class="demo-section">
+      <h2>Interactive Counter</h2>
+      <Counter :initial="5" @change="logChange" />
+      <p class="hint">Click the buttons to increment/decrement. The value is managed by Vue's reactivity system!</p>
+    </section>
+
+    <section class="demo-section">
+      <h2>What's Happening</h2>
+      <ul>
+        <li>The <code>&lt;Counter /&gt;</code> component is a full Vue component</li>
+        <li>Astro loads it on the client and hydrates it with Vue</li>
+        <li>State is managed by Vue's <code>ref()</code> API</li>
+        <li>Events bubble up via Vue's <code>emit</code> system</li>
+      </ul>
+    </section>
+
+    <div class="back-link">
+      <a href="/">Back Home</a>
+    </div>
+  </main>
+</Layout>
+
+<script>
+function logChange(value) {
+  console.log('Counter changed to:', value);
+}
+</script>
+
+<style>
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  h1 {
+    text-align: center;
+    color: #e0e0e0;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: #ccc;
+    line-height: 1.6;
+  }
+
+  .demo-section {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .demo-section h2 {
+    color: #e0e0e0;
+    margin-bottom: 1.5rem;
+  }
+
+  .hint {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-top: 1rem;
+  }
+
+  code {
+    background: #2a2a2a;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: monospace;
+    color: #e0e0e0;
+  }
+
+  .back-link {
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  .back-link a {
+    color: #646cff;
+    text-decoration: none;
+  }
+</style>

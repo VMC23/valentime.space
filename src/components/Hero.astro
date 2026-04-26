@@ -1,0 +1,100 @@
+---
+const { title, subtitle, ctaText = "Learn More", ctaLink = "/" } = Astro.props;
+---
+
+<section class="hero">
+  <div class="hero-content">
+    <h1 class="hero-title">
+      Build with Astro & Vue
+      <span class="not-institutions">not in institutions</span>
+    </h1>
+    <p class="subtitle">{subtitle}</p>
+    <a href={ctaLink} class="cta-button">{ctaText}</a>
+  </div>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+
+  // Hover animation for the struck text using GSAP
+  document.addEventListener('DOMContentLoaded', () => {
+    const notEl = document.querySelector('.not-institutions');
+    if (notEl) {
+      notEl.addEventListener('mouseenter', () => {
+        gsap.to(notEl, { scale: 1.05, duration: 0.3 });
+      });
+      notEl.addEventListener('mouseleave', () => {
+        gsap.to(notEl, { scale: 1, duration: 0.3 });
+      });
+    }
+  });
+</script>
+
+<style>
+  .hero {
+    background: linear-gradient(135deg, #646cff 0%, #a855f7 100%);
+    padding: 5rem 2rem;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+  }
+
+  .hero-content {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    display: block;
+  }
+
+  .not-institutions {
+    display: block;
+    font-size: 2rem;
+    font-weight: 400;
+    color: #e0e0e0;
+    position: relative;
+    text-decoration: none;
+    animation: fadeInUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    opacity: 0;
+    transform: translateY(50px) rotateX(-90deg);
+    transform-origin: center bottom;
+  }
+
+  .not-institutions::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #ff4757, #ff6b81);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  .not-institutions:hover::before {
+    transform: scaleX(1);
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0) rotateX(0);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .hero-title {
+      font-size: 4rem;
+    }
+    .not-institutions {
+      font-size: 2.5rem;
+    }
+  }
+</style>
