@@ -2,77 +2,103 @@
 import Layout from '../layouts/MainLayout.astro';
 ---
 
-<Layout title="Fragend schreite ich voran" description="Zitat - Valentime.space">
-  <main class="container">
-    <h1>Fragend schreite ich voran</h1>
-    <p class="quote-source">("preguntando caminamos" - Zapatista de Liberación Nacionál)</p>
-    <p class="context">an den Rändern von Institutionen, in der freien Szene zwischen Altstetten und Bröllin.</p>
-    <p class="context">Resistance, Care und Vernetzung an sich ist bereits ein Full-Time Job. Daneben liebe ich es, mit Jugendlichen zu gestalten - und Videomaterial zu generieren.</p>
-    <p class="context">CV? -> auf Anfrage.</p>
-   </main>
+<Layout title="About — Valentine Brasser" description="Fragend schreite ich voran">
+  <main class="about">
+    <h1 class="quote">Fragend schreite ich voran</h1>
+    <p class="quote-source">"preguntando caminamos"<br>Zapatista de Liberación Nacional</p>
+
+    <hr class="divider">
+
+    <p class="bio">an den Rändern von Institutionen, in der freien Szene zwischen Altstetten und Bröllin.</p>
+    <p class="bio">Resistance, Care und Vernetzung an sich ist bereits ein Vollzeitjob. Daneben liebe ich es, mit Jugendlichen zu gestalten — und Videomaterial zu generieren.</p>
+    <p class="bio contact">CV? &rarr; auf Anfrage.</p>
+  </main>
 </Layout>
 
+<script>
+  import gsap from 'gsap';
+
+  gsap.fromTo('.about .quote',
+    { opacity: 0, y: 30 },
+    { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out', delay: 0.3 }
+  );
+  gsap.fromTo('.about .quote-source',
+    { opacity: 0 },
+    { opacity: 0.6, duration: 1, ease: 'power2.out', delay: 0.8 }
+  );
+  gsap.fromTo('.about .divider',
+    { scaleX: 0 },
+    { scaleX: 1, duration: 0.8, ease: 'power2.inOut', delay: 1.0 }
+  );
+  gsap.fromTo('.about .bio',
+    { opacity: 0, y: 20 },
+    { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out', delay: 1.2, stagger: 0.15 }
+  );
+</script>
+
 <style>
-  .container {
-    max-width: 720px;
+  .about {
+    max-width: 680px;
     margin: 0 auto;
-    padding: 4rem 2rem;
-    min-height: 80vh;
+    padding: 10rem 2rem 6rem;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #000;
+    text-align: center;
   }
 
-  h1 {
-    color: #ffffff;
-    font-size: clamp(2.5rem, 6vw, 4rem);
-    font-weight: 700;
-    line-height: 1.2;
-    text-align: center;
+  .quote {
+    font-family: 'TerminalGrotesque', sans-serif;
+    font-size: clamp(2.4rem, 7vw, 4.5rem);
+    font-weight: normal;
+    color: #fff;
+    line-height: 1.1;
+    letter-spacing: 0.1em;
     margin-bottom: 1.5rem;
+    opacity: 0;
   }
 
   .quote-source {
-    color: #a0a0a0;
-    font-size: clamp(0.9rem, 3vw, 1.2rem);
+    font-family: 'OfficeCodePro', sans-serif;
+    font-size: 0.85rem;
+    color: #888;
     font-style: italic;
-    text-align: center;
-    margin-bottom: 2rem;
-    opacity: 0.8;
-  }
-
-  .context {
-    color: #cccccc;
-    font-size: clamp(1rem, 3vw, 1.4rem);
     line-height: 1.6;
-    text-align: center;
-    max-width: 700px;
+    letter-spacing: 0.05em;
+    opacity: 0;
   }
 
-  .context:last-of-type {
-    margin-bottom: 2rem;
+  .divider {
+    border: none;
+    height: 1px;
+    background: #333;
+    width: 60px;
+    margin: 3rem 0;
+    transform-origin: center;
+    transform: scaleX(0);
   }
 
-  .video-container {
-    margin: 1rem 0;
+  .bio {
+    font-family: 'OfficeCodePro', sans-serif;
+    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+    color: #aaa;
+    line-height: 1.8;
+    max-width: 520px;
+    margin-bottom: 1rem;
+    opacity: 0;
   }
 
-  .video {
-    max-width: 100%;
-    height: auto;
-    width: clamp(24rem, 72vw, 48rem);
-    display: block;
-    margin: 0 auto;
-    border-radius: 8px;
+  .contact {
+    margin-top: 1rem;
+    color: #00d2ff;
+    font-size: 0.9rem;
   }
 
-  .video-caption {
-    color: #a0a0a0;
-    font-size: clamp(0.8rem, 2.5vw, 1rem);
-    text-align: center;
-    opacity: 0.7;
-    margin-top: 0.5rem;
+  @media (max-width: 600px) {
+    .about {
+      padding: 8rem 1.5rem 4rem;
+    }
   }
 </style>

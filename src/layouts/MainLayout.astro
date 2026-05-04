@@ -7,28 +7,105 @@ const { title, description } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="stylesheet" href="/global.css" />
   </head>
   <body>
-    <header class="site-header">
-      <nav class="container">
-        <a href="/" class="logo">Valentime.space</a>
-        <ul class="nav-links">
-          <li><a href="/">Home</a></li>
-          <li><a href="/about">About</a></li>
-          <li><a href="/blog">Blog</a></li>
-        </ul>
-      </nav>
-    </header>
+    <nav class="nav-overlay" id="main-nav">
+      <a href="/" class="nav-logo">V.</a>
+      <ul class="nav-links">
+        <li><a href="/">Work</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/blog">Blog</a></li>
+      </ul>
+    </nav>
 
     <slot />
 
     <footer class="site-footer">
-      <div class="container">
-        <p>&copy; 2026 Valentime.space. Built with Astro & Vue.</p>
-      </div>
+      <span>Valentine Brasser &mdash; 2026</span>
     </footer>
+
+    <script>
+      import gsap from 'gsap';
+
+      gsap.fromTo('#main-nav',
+        { opacity: 0, y: -20 },
+        { opacity: 1, y: 0, duration: 1, ease: 'power2.out', delay: 0.3 }
+      );
+    </script>
   </body>
 </html>
+
+<style>
+  .nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2.5rem;
+    opacity: 0;
+    mix-blend-mode: difference;
+  }
+
+  .nav-logo {
+    font-family: 'TerminalGrotesque', sans-serif;
+    font-size: 1.8rem;
+    color: #fff;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: #fff;
+    text-decoration: none;
+    font-family: 'OfficeCodePro', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    transition: opacity 0.3s ease;
+  }
+
+  .nav-links a:hover {
+    opacity: 0.5;
+    color: #fff;
+  }
+
+  .site-footer {
+    padding: 3rem 2.5rem;
+    text-align: center;
+  }
+
+  .site-footer span {
+    font-family: 'OfficeCodePro', sans-serif;
+    font-size: 0.7rem;
+    color: #444;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+
+  @media (max-width: 600px) {
+    .nav-overlay {
+      padding: 1rem 1.5rem;
+    }
+    .nav-links {
+      gap: 1.5rem;
+    }
+    .nav-links a {
+      font-size: 0.65rem;
+    }
+  }
+</style>

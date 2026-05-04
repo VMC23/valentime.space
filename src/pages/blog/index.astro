@@ -4,6 +4,7 @@ import { readFileSync } from 'fs';
 import { glob } from 'glob';
 import { join } from 'path';
 import frontMatter from 'front-matter';
+import { marked } from 'marked';
 
 const blogDir = join(import.meta.dirname, '../../../blog/entries');
 const mdFiles = glob.sync(join(blogDir, '*.md'));
@@ -14,7 +15,8 @@ const posts = mdFiles.map(file => {
   const slug = file.split('/').pop()?.replace('.md', '');
   return {
     slug,
-    ...fm.attributes
+    ...fm.attributes,
+    html: marked(fm.body),
   };
 }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 ---
@@ -25,10 +27,13 @@ const posts = mdFiles.map(file => {
 
     <section class="posts">
       {posts.map(post => (
-        <article class="post">
-          <h2>{post.title}</h2>
+        <article class={`post ${post.slug === 'whiteness-and-colonial-legacy' ? 'post--preview' : ''}`}>
+          <h2><a href={`/blog/${post.slug}`}>{post.title}</a></h2>
           <p class="meta">{new Date(post.date).toLocaleDateString()}</p>
-          <div class="content">{post.excerpt}</div>
+          <div class={`content ${post.slug === 'whiteness-and-colonial-legacy' ? 'content--truncated' : ''}`} set:html={post.html} />
+          {post.slug === 'whiteness-and-colonial-legacy' && (
+            <a href={`/blog/${post.slug}`} class="read-more">weiterlesen &rarr;</a>
+          )}
         </article>
       ))}
     </section>
@@ -69,15 +74,74 @@ const posts = mdFiles.map(file => {
     font-size: clamp(1.5rem, 4vw, 2.5rem);
   }
 
+  h2 a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  h2 a:hover {
+    color: #00d2ff;
+  }
+
+  .content--truncated {
+    max-height: 7.5em;
+    overflow: hidden;
+    position: relative;
+    -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+  }
+
+  .read-more {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-family: 'OfficeCodePro', sans-serif;
+    font-size: 0.85rem;
+    color: #00d2ff;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: opacity 0.3s ease;
+  }
+
+  .read-more:hover {
+    opacity: 0.6;
+  }
+
   .meta {
     color: #aaa;
     font-size: 0.9rem;
     margin-bottom: 1rem;
   }
 
-  .content {
+  .content :global(p) {
     color: #ccc;
-    line-height: 1.6;
-    white-space: pre-wrap;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+
+  .content :global(blockquote) {
+    border-left: 2px solid #333;
+    margin: 1.5rem 0;
+    padding: 1rem 1.5rem;
+  }
+
+  .content :global(blockquote p) {
+    color: #999;
+    font-style: italic;
+  }
+
+  .content :global(.blog-video) {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 1.5rem 0;
+  }
+
+  .content :global(.video-caption) {
+    color: #666;
+    font-size: 0.8rem;
+    text-align: center;
+    margin-top: 0.5rem;
   }
 </style>

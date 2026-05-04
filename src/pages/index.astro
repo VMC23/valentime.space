@@ -1,160 +1,369 @@
 ---
 import Layout from '../layouts/MainLayout.astro';
 
-const title = "Video & Vermittlung";
+const title = "Valentine Brasser — Video & Vermittlung";
 const description = "Video & Vermittlung";
 ---
 
 <Layout title={title} description={description}>
-  <main class="container">
-    <div class="title-wrapper">
-      <h1 class="main-title">Video & Vermittlung</h1>
-    </div>
 
-    <!-- ResistanceIsKey -->
-    <div class="video-container">
-      <video src="/ResistanceIsKey.mp4" autoplay loop muted playsinline class="video"></video>
+  <!-- HERO: full-viewport background video -->
+  <section class="hero">
+    <video src="/ResistanceIsKey.mp4" autoplay loop muted playsinline class="hero-video"></video>
+    <div class="hero-overlay"></div>
+    <div class="hero-content" id="hero-title">
+      <h1 class="hero-title">Video &<br>Vermittlung</h1>
     </div>
-    <p class="video-caption">Zurich, 2026.</p>
+    <p class="hero-caption" id="hero-caption">Resistance Is Key — Zurich, 2026</p>
+    <div class="hero-scroll-hint" id="scroll-hint">
+      <span>&darr;</span>
+    </div>
+  </section>
 
-    <!-- Decolonial Website Vid -->
-    <div class="video-container">
-      <div class="video-text-caption">
-        <p>Vermittlung & (Live-)Kamera in Offspaces, Schulen, Universitäten, Museen, Festivals.</p>
+  <!-- WELCOME -->
+  <section class="welcome-section" data-anim>
+    <p class="welcome-text">Willkommen &lt;3</p>
+  </section>
+
+  <!-- PROJECT: Decolonial -->
+  <section class="project-section" data-anim>
+    <div class="project-full">
+      <div class="project-video-wrap">
+        <video src="/Decolonial Website Vid.mov" autoplay loop muted playsinline class="project-video"></video>
       </div>
-      <video src="/Decolonial Website Vid.mov" autoplay loop muted playsinline class="video"></video>
-      <p class="video-text-caption" style="margin-top: 3rem;">Performance und Video, Diversity Politics and the Arts: Post-colonial Perspectives, 2026.</p>
+      <p class="project-caption">Performance und Video, Diversity Politics and the Arts: Post-colonial Perspectives, 2026.</p>
     </div>
+  </section>
 
-    <!-- Moods Video -->
-    <div class="video-container" style="margin-top: 2rem;">
-      <video src="/Moods_Video.mp4" autoplay loop muted playsinline class="video"></video>
-      <p class="video-text-caption">Ali Dada, Moods, 2025.</p>
+  <!-- PROJECT: Moods -->
+  <section class="project-section" data-anim>
+    <div class="project-bleed">
+      <video src="/Moods_Video.mp4" autoplay loop muted playsinline class="project-video-bleed"></video>
+      <p class="project-caption">Ali Dada, Moods, 2025.</p>
     </div>
+  </section>
 
-    <!-- Blob Berlin Video -->
-    <div class="video-container">
-      <video src="/Blob Berlin Video.mp4" autoplay loop muted playsinline class="video"></video>
-      <p class="video-text-caption">Blob, hergestellt mit den Besucher:innen auf der documenta fifteen, mit: Kollektiv Loom Loop.<br>Video: Berlin, 2023.</p>
+  <!-- PROJECT: Blob Berlin -->
+  <section class="project-section" data-anim>
+    <div class="project-full">
+      <div class="project-video-wrap">
+        <video src="/Blob Berlin Video.mp4" autoplay loop muted playsinline class="project-video"></video>
+      </div>
+      <p class="project-caption">Blob, hergestellt mit den Besucher:innen auf der documenta fifteen, mit: Kollektiv Loom Loop.<br>Video: Berlin, 2023.</p>
     </div>
+  </section>
 
-    <div class="slideshow-container">
-      <div class="slideshow">
+  <!-- SLIDESHOW: WDC Photos -->
+  <section class="project-section slideshow-section" data-anim>
+    <div class="slideshow-wrap">
+      <div class="slideshow" id="slideshow">
         <img src="/220930_WDC_BadHomburg_ValentineBrasser_6388.jpg" alt="WDC Photo 1" class="slide active">
         <img src="/220930_WDC_BadHomburg_ValentineBrasser_6422-1.jpg" alt="WDC Photo 2" class="slide">
         <img src="/WDC_Tour-3_Valentinebrasser.png" alt="WDC Photo 3" class="slide">
       </div>
-      <p class="video-text-caption">Vermittlung und Fotografie: Design for Democracy, Frankfurt 2022.</p>
+      <p class="slideshow-caption">Vermittlung und Fotografie: Design for Democracy, Frankfurt 2022.</p>
     </div>
+  </section>
 
-  </main>
 </Layout>
 
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Hero content fade-in
+  gsap.fromTo('#hero-title',
+    { opacity: 0, y: 40 },
+    { opacity: 1, y: 0, duration: 1.4, ease: 'power3.out', delay: 0.6 }
+  );
+  gsap.fromTo('#hero-caption',
+    { opacity: 0 },
+    { opacity: 0.5, duration: 1, ease: 'power2.out', delay: 1.4 }
+  );
+
+  // Scroll hint pulse + fade on scroll
+  gsap.to('#scroll-hint', {
+    opacity: 0,
+    scrollTrigger: {
+      trigger: '#scroll-hint',
+      start: 'top 80%',
+      end: 'top 20%',
+      scrub: true,
+    }
+  });
+
+  // Animate each project section
+  document.querySelectorAll('[data-anim]').forEach((section) => {
+    gsap.fromTo(section,
+      { opacity: 0, y: 60 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 85%',
+          end: 'top 40%',
+          toggleActions: 'play none none none',
+        }
+      }
+    );
+
+    // Slight scale on videos inside
+    const video = section.querySelector('video');
+    if (video) {
+      gsap.fromTo(video,
+        { scale: 1.04 },
+        {
+          scale: 1,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: video,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true,
+          }
+        }
+      );
+    }
+  });
+
+  // Slideshow crossfade
+  const slides = document.querySelectorAll('#slideshow .slide');
+  let current = 0;
+  if (slides.length > 1) {
+    setInterval(() => {
+      slides[current].classList.remove('active');
+      current = (current + 1) % slides.length;
+      slides[current].classList.add('active');
+    }, 4000);
+  }
+</script>
+
 <style>
-  .container {
+  /* ── HERO ── */
+  .hero {
+    position: relative;
     width: 100%;
-    max-width: none;
-    margin: 0;
-    padding: 6rem 2rem;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.3) 0%,
+      rgba(0,0,0,0.1) 40%,
+      rgba(0,0,0,0.5) 100%
+    );
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    background: transparent;
+    gap: 1.5rem;
+    opacity: 0;
   }
 
-  .title-wrapper {
-    margin-bottom: 2rem;
+  .hero-title {
+    font-family: 'TerminalGrotesque', sans-serif;
+    font-size: clamp(3rem, 10vw, 8rem);
+    font-weight: normal;
+    color: #fff;
+    text-align: center;
+    letter-spacing: 0.15em;
+    line-height: 1.05;
   }
 
-.main-title {
-  font-size: clamp(2.8rem, 6.4vw, 5.6rem);
-  font-weight: normal;
-  line-height: 1.1;
-  text-align: center;
-  letter-spacing: 0.2em;
-  color: #ffffff;
-}
+  .hero-caption {
+    position: absolute;
+    bottom: 5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    font-family: 'OfficeCodePro', sans-serif;
+    font-size: 0.7rem;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    opacity: 0;
+    white-space: nowrap;
+  }
 
-.video-container {
-  margin: 2rem 0;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+  .hero-scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    color: #fff;
+    font-size: 1.4rem;
+    opacity: 0.5;
+    animation: bob 2s ease-in-out infinite;
+  }
 
-.video {
-  max-width: 100%;
-  height: auto;
-  width: clamp(30.8rem, 68vw, 61.6rem);
-  display: block;
-  margin: 0 auto;
-  border-radius: 16px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
-  transition: transform 0.3s ease;
-  background-color: #000;
-}
+  @keyframes bob {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
 
-.video:hover {
-  transform: scale(1.01);
-}
+  /* ── WELCOME ── */
+  .welcome-section {
+    padding: 5rem 2rem;
+    text-align: center;
+    opacity: 0;
+  }
 
-.video-caption {
-  color: #aaa;
-  font-size: clamp(0.8rem, 2vw, 1rem);
-  text-align: center;
-  opacity: 0.7;
-  margin-top: 1rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
+  .welcome-text {
+    font-family: 'TerminalGrotesque', sans-serif;
+    font-size: clamp(1.6rem, 4vw, 2.8rem);
+    color: #fff;
+    letter-spacing: 0.1em;
+  }
 
-.video-text-caption {
-  color: #00d2ff;
-  font-size: clamp(1rem, 3vw, 1.4rem);
-  line-height: 1.6;
-  text-align: center;
-  max-width: 700px;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  width: 100%;
-}
+  /* ── PROJECT SECTIONS ── */
+  .project-section {
+    padding: 6rem 0;
+    opacity: 0;
+  }
 
-.video-text-caption p {
-  margin: 0;
-  text-align: center;
-}
+  .project-full {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
 
-.slideshow-container {
-  margin: 4rem 0;
-  width: clamp(30.8rem, 68vw, 61.6rem);
-  position: relative;
-}
+  .project-text-side {
+    max-width: 680px;
+    text-align: center;
+  }
 
-.slideshow {
-  position: relative;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 16/9;
-  overflow: hidden;
-  border-radius: 16px;
-}
+  .project-description {
+    font-family: 'OfficeCodePro', sans-serif;
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: #00d2ff;
+    line-height: 1.7;
+    letter-spacing: 0.02em;
+  }
 
-.slide {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  transition: opacity 1s ease-in-out;
-}
+  .project-video-wrap {
+    width: 100%;
+    overflow: hidden;
+  }
 
-.slide.active {
-  opacity: 1;
-}
+  .project-video {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
 
+  /* Full-bleed variant */
+  .project-bleed {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .project-video-bleed {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .project-caption {
+    font-family: 'OfficeCodePro', sans-serif;
+    font-size: 0.8rem;
+    color: #666;
+    text-align: center;
+    margin-top: 1.5rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0 2rem;
+  }
+
+  /* ── SLIDESHOW ── */
+  .slideshow-section {
+    padding: 4rem 0 8rem;
+  }
+
+  .slideshow-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .slideshow {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/10;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+  }
+
+  .slide.active {
+    opacity: 1;
+  }
+
+  .slideshow-caption {
+    font-family: 'OfficeCodePro', sans-serif;
+    font-size: 0.8rem;
+    color: #666;
+    text-align: center;
+    margin-top: 1.5rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .project-section {
+      padding: 3rem 0;
+    }
+
+    .hero-title {
+      font-size: clamp(2.2rem, 12vw, 4rem);
+    }
+
+    .project-full {
+      padding: 0 1rem;
+    }
+  }
 </style>

@@ -112,8 +112,35 @@ const nextPost = postIndex < allPosts.length - 1 ? allPosts[postIndex + 1] : nul
     color: #e0e0e0;
   }
 
+  .content :global(blockquote) {
+    border-left: 2px solid #333;
+    margin: 2rem 0;
+    padding: 1.5rem 1.5rem 1.5rem 2rem;
+    background: rgba(255,255,255,0.02);
+  }
+
+  .content :global(blockquote p) {
+    color: #999;
+    font-size: 0.95rem;
+    font-style: italic;
+    line-height: 1.8;
+  }
+
+  .content :global(blockquote em) {
+    font-style: normal;
+    text-decoration: underline;
+    text-decoration-color: #444;
+  }
+
+  .content :global(hr) {
+    border: none;
+    height: 1px;
+    background: #333;
+    margin: 2.5rem 0;
+  }
+
   .content :global(a) {
-    color: #646cff;
+    color: #00d2ff;
   }
 
   .content :global(.blog-video) {
@@ -142,7 +169,7 @@ const nextPost = postIndex < allPosts.length - 1 ? allPosts[postIndex + 1] : nul
   }
 
   .post-nav a {
-    color: #646cff;
+    color: #00d2ff;
     text-decoration: none;
   }
 
@@ -157,6 +184,6 @@ const nextPost = postIndex < allPosts.length - 1 ? allPosts[postIndex + 1] : nul
   }
 
   .back-link a:hover {
-    color: #646cff;
+    color: #00d2ff;
   }
 </style>
