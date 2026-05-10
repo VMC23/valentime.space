@@ -65,7 +65,7 @@ const nextPost = postIndex < allPosts.length - 1 ? allPosts[postIndex + 1] : nul
   .container {
     max-width: 720px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: clamp(5rem, 10vh, 8rem) clamp(1rem, 4vw, 2rem) 2rem;
   }
 
   header {
@@ -76,6 +76,7 @@ const nextPost = postIndex < allPosts.length - 1 ? allPosts[postIndex + 1] : nul
   h1 {
     color: #e0e0e0;
     margin-bottom: 1rem;
+    font-size: clamp(1.4rem, 5vw, 2.5rem);
   }
 
   .meta {
@@ -102,6 +103,8 @@ const nextPost = postIndex < allPosts.length - 1 ? allPosts[postIndex + 1] : nul
     border-radius: 4px;
     overflow-x: auto;
     border: 1px solid #333;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
   }
 
   .content :global(code) {
@@ -110,18 +113,19 @@ const nextPost = postIndex < allPosts.length - 1 ? allPosts[postIndex + 1] : nul
     padding: 0.2rem 0.4rem;
     border-radius: 3px;
     color: #e0e0e0;
+    word-break: break-word;
   }
 
   .content :global(blockquote) {
     border-left: 2px solid #333;
-    margin: 2rem 0;
-    padding: 1.5rem 1.5rem 1.5rem 2rem;
+    margin: 1.5rem 0;
+    padding: 1rem 1rem 1rem 1.2rem;
     background: rgba(255,255,255,0.02);
   }
 
   .content :global(blockquote p) {
     color: #999;
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 2.5vw, 0.95rem);
     font-style: italic;
     line-height: 1.8;
   }
@@ -146,7 +150,7 @@ const nextPost = postIndex < allPosts.length - 1 ? allPosts[postIndex + 1] : nul
   .content :global(.blog-video) {
     max-width: 100%;
     height: auto;
-    width: clamp(24rem, 72vw, 48rem);
+    width: min(100%, 48rem);
     display: block;
     margin: 2rem auto;
     border-radius: 8px;
@@ -185,5 +189,36 @@ const nextPost = postIndex < allPosts.length - 1 ? allPosts[postIndex + 1] : nul
 
   .back-link a:hover {
     color: #00d2ff;
+  }
+
+  @media (max-width: 768px) {
+    header {
+      margin-bottom: 2rem;
+    }
+    .content :global(.blog-video) {
+      border-radius: 4px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .content :global(p) {
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+    .post-nav {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .post-nav a {
+      font-size: 0.9rem;
+      padding: 0.5rem 0;
+    }
+    .content :global(.blog-video) {
+      border-radius: 0;
+      margin-left: -1rem;
+      margin-right: -1rem;
+      width: calc(100% + 2rem);
+      max-width: none;
+    }
   }
 </style>

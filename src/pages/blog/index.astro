@@ -40,6 +40,10 @@ const posts = mdFiles.map(file => {
         );
       })}
     </section>
+
+    <div class="cta-link">
+      <a href="/" class="home-link">+work</a>
+    </div>
   </main>
 </Layout>
 
@@ -146,5 +150,49 @@ const posts = mdFiles.map(file => {
     font-size: 0.8rem;
     text-align: center;
     margin-top: 0.5rem;
+  }
+
+  .cta-link {
+    text-align: center;
+    padding: 3rem 0 2rem;
+  }
+
+  .home-link {
+    font-family: 'OfficeCodePro', sans-serif;
+    font-size: 0.85rem;
+    color: #00d2ff;
+    text-decoration: none;
+    letter-spacing: 0.15em;
+    transition: opacity 0.3s ease;
+  }
+
+  .home-link:hover {
+    opacity: 0.5;
+  }
+
+  @media (max-width: 768px) {
+    .posts {
+      gap: 2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .container {
+      padding: clamp(4rem, 8vh, 5rem) 1rem 1.5rem;
+    }
+    h2 {
+      font-size: clamp(1.1rem, 5vw, 1.4rem);
+    }
+    .meta {
+      font-size: 0.8rem;
+    }
+    .read-more {
+      font-size: 0.8rem;
+      padding: 0.3rem 0;
+    }
+    .content :global(p) {
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
   }
 </style>

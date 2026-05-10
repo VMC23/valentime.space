@@ -4,70 +4,257 @@ import Layout from '../layouts/MainLayout.astro';
 
 <Layout title="About — Valentine Brasser" description="Fragend schreite ich voran">
   <main class="about">
-    <h1 class="quote">Fragend schreite ich voran</h1>
+    <h1 class="quote">Fragend<br>schreite ich voran</h1>
     <p class="quote-source">"preguntando caminamos"<br>Zapatista de Liberación Nacional</p>
 
     <hr class="divider">
 
-    <p class="bio">an den Rändern von Institutionen, in der freien Szene zwischen Altstetten und Bröllin.</p>
-    <p class="bio">Resistance, Care und Vernetzung an sich ist bereits ein Vollzeitjob. Daneben liebe ich es, mit Jugendlichen zu gestalten — und Videomaterial zu generieren.</p>
-    <p class="bio contact">CV? &rarr; auf Anfrage.</p>
+    <p class="bio">I move through spaces — listening, watching, filming, cleaning, speaking, teaching — where social practices are questioned. Where intelligent systems and textures in sound and visuals are being created.</p>
+    <p class="bio contact">cv or collab? say hi.<br>hoi@wokebit.ch</p>
+
+    <p class="bio collab-label">ps. i collaborated with:</p>
+
+    <div class="collab-space" id="collab-space">
+      <div class="collab-field" id="collab-field">
+        <span class="collab-name">ETH Plant Science Center</span>
+        <span class="collab-name">ZHdK Ver:üben</span>
+        <span class="collab-name">ZHdK Ein Recht auf Wir</span>
+        <span class="collab-name">Gessnerallee</span>
+        <span class="collab-name">Fotogen Model Agency</span>
+        <span class="collab-name">Schauspielhaus Zürich</span>
+        <span class="collab-name">Schule Baden</span>
+        <span class="collab-name">Goldbach Media</span>
+        <span class="collab-name">Château Festival</span>
+        <span class="collab-name">Photobastei</span>
+        <span class="collab-name">Underground Raves</span>
+        <span class="collab-name">Hedonistische Internationale</span>
+        <span class="collab-name">Anna Papst</span>
+        <span class="collab-name">Kathrin Veith</span>
+        <span class="collab-name">Sophie Vögele</span>
+        <span class="collab-name">Design for Democracy</span>
+        <span class="collab-name">Musée Visionnaire</span>
+      </div>
+    </div>
+
+    <p class="bio pps">pps. i coded this website with Claude and Astro.</p>
+
+    <a href="/blog" class="blog-link">+blog</a>
   </main>
 </Layout>
 
 <script>
   import gsap from 'gsap';
 
-  gsap.fromTo('.about .quote',
-    { opacity: 0, y: 30 },
-    { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out', delay: 0.3 }
-  );
-  gsap.fromTo('.about .quote-source',
-    { opacity: 0 },
-    { opacity: 0.6, duration: 1, ease: 'power2.out', delay: 0.8 }
-  );
-  gsap.fromTo('.about .divider',
-    { scaleX: 0 },
-    { scaleX: 1, duration: 0.8, ease: 'power2.inOut', delay: 1.0 }
-  );
-  gsap.fromTo('.about .bio',
-    { opacity: 0, y: 20 },
-    { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out', delay: 1.2, stagger: 0.15 }
-  );
+  gsap.set('.about .quote', { opacity: 0, y: 30 });
+  gsap.to('.about .quote', { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out', delay: 0.3 });
+
+  gsap.set('.about .quote-source', { opacity: 0 });
+  gsap.to('.about .quote-source', { opacity: 0.6, duration: 1, ease: 'power2.out', delay: 0.8 });
+
+  gsap.set('.about .divider', { scaleX: 0 });
+  gsap.to('.about .divider', { scaleX: 1, duration: 0.8, ease: 'power2.inOut', delay: 1.0 });
+
+  gsap.set('.about .bio', { opacity: 0, y: 20 });
+  gsap.to('.about .bio', { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out', delay: 1.2, stagger: 0.15 });
+
+  // Floating collaborator names
+  const names = document.querySelectorAll('.collab-name');
+  const field = document.getElementById('collab-field');
+
+  if (names.length && field) {
+    const total = names.length;
+    // ~50% visible
+    const hiddenCount = Math.round(total * 0.5);
+
+    const gap = 40;
+    const maxDrift = 8;
+    const collabColors = [
+      '#00d2ff', '#ff6b9d', '#a78bfa', '#34d399', '#fbbf24',
+      '#f87171', '#818cf8', '#fb923c', '#2dd4bf', '#e879f9',
+      '#38bdf8', '#a3e635', '#f472b6', '#67e8f9', '#c084fc',
+      '#fcd34d', '#4ade80',
+    ];
+    const state = [];
+    names.forEach((name, i) => {
+      const color = collabColors[i % collabColors.length];
+      state.push({ el: name, visible: false, hiding: false, driftTweenY: null, driftTweenX: null, baseLeft: 0, baseTop: 0, color });
+      gsap.set(name, { opacity: 0, x: 0, y: 0 });
+    });
+
+    // Get base rects (without drift) of visible names, expanded by drift + gap
+    function getOccupied(exclude) {
+      return state.filter(s => s.visible && s !== exclude).map(s => {
+        const ew = s.el.offsetWidth || 100;
+        const eh = s.el.offsetHeight || 20;
+        return {
+          left: s.baseLeft - maxDrift - gap,
+          top: s.baseTop - maxDrift - gap,
+          right: s.baseLeft + ew + maxDrift + gap,
+          bottom: s.baseTop + eh + maxDrift + gap,
+        };
+      });
+    }
+
+    function overlaps(left, top, w, h, occupied) {
+      const r = {
+        left: left - maxDrift,
+        top: top - maxDrift,
+        right: left + w + maxDrift,
+        bottom: top + h + maxDrift,
+      };
+      return occupied.some(o =>
+        r.left < o.right && r.right > o.left && r.top < o.bottom && r.bottom > o.top
+      );
+    }
+
+    function findPos(el, exclude) {
+      const fw = field.offsetWidth;
+      const fh = field.offsetHeight;
+      const ew = el.offsetWidth || 100;
+      const eh = el.offsetHeight || 20;
+      const edgePad = 16; // keep names away from viewport edges
+      const margin = maxDrift + gap + edgePad;
+      const occupied = getOccupied(exclude);
+
+      for (let attempt = 0; attempt < 120; attempt++) {
+        const rx = Math.random();
+        const ry = (Math.random() + Math.random()) / 2;
+        const left = margin + rx * Math.max(0, fw - ew - margin * 2);
+        const top = margin + ry * Math.max(0, fh - eh - margin * 2);
+        if (!overlaps(left, top, ew, eh, occupied)) {
+          return { left, top };
+        }
+      }
+      return {
+        left: margin + Math.random() * Math.max(0, fw - ew - margin * 2),
+        top: margin + Math.random() * Math.max(0, fh - eh - margin * 2),
+      };
+    }
+
+    function startDrift(s) {
+      const driftDur = 8 + Math.random() * 7;
+      const driftX = (Math.random() - 0.5) * maxDrift * 2;
+      const driftY = (Math.random() - 0.5) * maxDrift * 2;
+
+      if (s.driftTweenY) s.driftTweenY.kill();
+      if (s.driftTweenX) s.driftTweenX.kill();
+
+      s.driftTweenY = gsap.to(s.el, {
+        y: driftY, duration: driftDur,
+        ease: 'sine.inOut', yoyo: true, repeat: -1,
+      });
+      s.driftTweenX = gsap.to(s.el, {
+        x: driftX, duration: driftDur * 1.3,
+        ease: 'sine.inOut', yoyo: true, repeat: -1,
+      });
+    }
+
+    function showName(s) {
+      const pos = findPos(s.el, s);
+      s.baseLeft = pos.left;
+      s.baseTop = pos.top;
+      gsap.set(s.el, { left: pos.left, top: pos.top, x: 0, y: 0, color: s.color });
+      s.visible = true;
+      s.hiding = false;
+      startDrift(s);
+      gsap.to(s.el, {
+        opacity: 0.85 + Math.random() * 0.15,
+        duration: 2.5 + Math.random() * 2,
+        ease: 'power2.out',
+      });
+    }
+
+    function hideName(s) {
+      s.visible = false;
+      if (s.driftTweenY) s.driftTweenY.kill();
+      if (s.driftTweenX) s.driftTweenX.kill();
+      gsap.to(s.el, {
+        opacity: 0,
+        duration: 2.5 + Math.random() * 2,
+        ease: 'power2.in',
+        onComplete: () => {
+          const pause = 3 + Math.random() * 5;
+          gsap.delayedCall(pause, () => showName(s));
+        },
+      });
+    }
+
+    // Initial staggered appearance — show ~80%
+    const shuffled = [...state].sort(() => Math.random() - 0.5);
+    shuffled.forEach((s, i) => {
+      if (i < total - hiddenCount) {
+        gsap.delayedCall(1.5 + i * 0.3, () => showName(s));
+      } else {
+        gsap.delayedCall(4 + Math.random() * 5, () => showName(s));
+      }
+    });
+
+    // Cycle: periodically hide a visible one
+    function cycleNames() {
+      const visible = state.filter(s => s.visible);
+      if (visible.length > total - hiddenCount) {
+        const victim = visible[Math.floor(Math.random() * visible.length)];
+        hideName(victim);
+      }
+      gsap.delayedCall(5 + Math.random() * 6, cycleNames);
+    }
+    gsap.delayedCall(6, cycleNames);
+
+    // Collision detection — fade out both and reappear elsewhere
+    function checkCollisions() {
+      const visible = state.filter(s => s.visible && !s.hiding);
+
+      for (let i = 0; i < visible.length; i++) {
+        for (let j = i + 1; j < visible.length; j++) {
+          const a = visible[i].el.getBoundingClientRect();
+          const b = visible[j].el.getBoundingClientRect();
+          if (a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top) {
+            // Pick one to relocate
+            const victim = Math.random() > 0.5 ? visible[i] : visible[j];
+            if (!victim.hiding) {
+              victim.hiding = true;
+              hideName(victim);
+            }
+          }
+        }
+      }
+
+      requestAnimationFrame(checkCollisions);
+    }
+    checkCollisions();
+  }
 </script>
 
 <style>
   .about {
     max-width: 680px;
     margin: 0 auto;
-    padding: 10rem 2rem 6rem;
-    min-height: 100vh;
+    padding: 10rem 2rem 2rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
+    overflow: visible;
   }
 
   .quote {
     font-family: 'TurboDriver', 'TerminalGrotesque', sans-serif;
-    font-size: clamp(2.4rem, 7vw, 4.5rem);
+    font-size: clamp(1.6rem, 5vw, 2.6rem);
     font-weight: normal;
     color: #fff;
-    line-height: 1.1;
-    letter-spacing: 0.1em;
+    line-height: 1.3;
+    letter-spacing: 0.08em;
     margin-bottom: 1.5rem;
-    opacity: 0;
   }
 
   .quote-source {
     font-family: 'OfficeCodePro', sans-serif;
-    font-size: 0.85rem;
-    color: #888;
+    font-size: clamp(0.8rem, 2.5vw, 1.05rem);
+    color: #ddd;
     font-style: italic;
     line-height: 1.6;
     letter-spacing: 0.05em;
-    opacity: 0;
   }
 
   .divider {
@@ -82,23 +269,107 @@ import Layout from '../layouts/MainLayout.astro';
 
   .bio {
     font-family: 'OfficeCodePro', sans-serif;
-    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
-    color: #aaa;
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+    color: #eee;
     line-height: 1.8;
     max-width: 520px;
     margin-bottom: 1rem;
-    opacity: 0;
   }
 
   .contact {
     margin-top: 1rem;
     color: #00d2ff;
-    font-size: 0.9rem;
   }
 
-  @media (max-width: 600px) {
+
+  .collab-space {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 1.5rem;
+    padding: 1rem 1rem;
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+    overflow: hidden;
+  }
+
+  .collab-label {
+    margin-top: 2rem;
+    color: #aaa;
+  }
+
+  .pps {
+    margin-top: 2rem;
+    color: #00d2ff;
+  }
+
+  .blog-link {
+    margin-top: 2rem;
+    font-family: 'OfficeCodePro', sans-serif;
+    font-size: 0.85rem;
+    color: #00d2ff;
+    text-decoration: none;
+    letter-spacing: 0.15em;
+    transition: opacity 0.3s ease;
+  }
+
+  .blog-link:hover {
+    opacity: 0.5;
+  }
+
+  .collab-field {
+    position: relative;
+    width: 100%;
+    height: 35vh;
+    min-height: 260px;
+  }
+
+  .collab-name {
+    position: absolute;
+    font-family: 'OfficeCodePro', sans-serif;
+    font-size: inherit;
+    color: #eee;
+    white-space: nowrap;
+    opacity: 0;
+  }
+
+
+  @media (max-width: 768px) {
     .about {
-      padding: 8rem 1.5rem 4rem;
+      padding: 6rem 1.5rem 2rem;
+    }
+    .divider {
+      margin: 2.5rem 0;
+    }
+    .collab-field {
+      height: 40vh;
+      min-height: 280px;
+    }
+    .collab-name {
+      white-space: nowrap;
+      max-width: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .about {
+      padding: 5rem 1.2rem 1rem;
+    }
+    .divider {
+      margin: 2rem 0;
+    }
+    .bio {
+      line-height: 1.7;
+    }
+    .contact {
+      font-size: 0.85rem;
+    }
+    .collab-space {
+      margin-top: 3rem;
+    }
+    .collab-field {
+      height: 50vh;
+      min-height: 320px;
     }
   }
 </style>
