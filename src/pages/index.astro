@@ -12,7 +12,10 @@ const description = "Video & Vermittlung";
     <video src="/ResistanceIsKey.mp4" autoplay loop muted playsinline class="hero-video"></video>
     <div class="hero-overlay"></div>
     <div class="hero-content" id="hero-title">
-      <h1 class="hero-title">Video &<br>Vermittlung</h1>
+      <h1 class="hero-title">
+        <span class="title-line title-left" id="title-left">Video &</span>
+        <span class="title-line title-right" id="title-right">Vermittlung</span>
+      </h1>
     </div>
     <p class="hero-caption" id="hero-caption">Resistance Is Key — Zurich, 2026</p>
     <div class="hero-scroll-hint" id="scroll-hint">
@@ -23,6 +26,14 @@ const description = "Video & Vermittlung";
   <!-- WELCOME -->
   <section class="welcome-section" data-anim>
     <p class="welcome-text">Willkommen &lt;3</p>
+  </section>
+
+  <!-- PROJECT: Diversity Cinema -->
+  <section class="project-section" data-anim>
+    <div class="project-bleed">
+      <video src="/gender_Diversity Cinema.mp4" autoplay loop muted playsinline class="project-video-bleed"></video>
+      <p class="project-caption">Diversity Cinema «Wie wir die Welt berühren...», Kino Toni, 2026.</p>
+    </div>
   </section>
 
   <!-- PROJECT: Decolonial -->
@@ -37,9 +48,21 @@ const description = "Video & Vermittlung";
 
   <!-- PROJECT: Moods -->
   <section class="project-section" data-anim>
-    <div class="project-bleed">
-      <video src="/Moods_Video.mp4" autoplay loop muted playsinline class="project-video-bleed"></video>
+    <div class="project-full">
+      <div class="project-video-wrap">
+        <video src="/Moods_Video.mp4" autoplay loop muted playsinline class="project-video"></video>
+      </div>
       <p class="project-caption">Ali Dada, Moods, 2025.</p>
+    </div>
+  </section>
+
+  <!-- PROJECT: ALL IN -->
+  <section class="project-section" data-anim>
+    <div class="project-full">
+      <div class="project-video-wrap">
+        <video src="/ALLIN_clip.mp4" autoplay loop muted playsinline class="project-video"></video>
+      </div>
+      <p class="project-caption">ALL IN — Elon Liberman, Musée Visionnaire, 2025.</p>
     </div>
   </section>
 
@@ -65,6 +88,15 @@ const description = "Video & Vermittlung";
     </div>
   </section>
 
+  <!-- GLITCH: DJ -->
+  <section class="project-section glitch-section" data-anim>
+    <div class="glitch-wrap">
+      <canvas id="glitch-canvas"></canvas>
+      <p class="project-caption">rave as an act of resistance</p>
+      <a href="https://soundcloud.com/kracy-caro-valentines" target="_blank" rel="noopener" class="glitch-link">click here to find out more &rarr;</a>
+    </div>
+  </section>
+
 </Layout>
 
 <script>
@@ -73,14 +105,22 @@ const description = "Video & Vermittlung";
 
   gsap.registerPlugin(ScrollTrigger);
 
-  // Hero content fade-in
+  // Hero title split animation
   gsap.fromTo('#hero-title',
-    { opacity: 0, y: 40 },
-    { opacity: 1, y: 0, duration: 1.4, ease: 'power3.out', delay: 0.6 }
+    { opacity: 0 },
+    { opacity: 1, duration: 0.3, delay: 0.4 }
+  );
+  gsap.fromTo('#title-left',
+    { x: '-100vw', opacity: 0 },
+    { x: 0, opacity: 1, duration: 1.4, ease: 'power3.out', delay: 0.5 }
+  );
+  gsap.fromTo('#title-right',
+    { x: '100vw', opacity: 0 },
+    { x: 0, opacity: 1, duration: 1.4, ease: 'power3.out', delay: 0.7 }
   );
   gsap.fromTo('#hero-caption',
     { opacity: 0 },
-    { opacity: 0.5, duration: 1, ease: 'power2.out', delay: 1.4 }
+    { opacity: 0.5, duration: 1, ease: 'power2.out', delay: 1.8 }
   );
 
   // Scroll hint pulse + fade on scroll
@@ -131,6 +171,84 @@ const description = "Video & Vermittlung";
     }
   });
 
+  // Glitch canvas
+  const gc = document.getElementById('glitch-canvas');
+  if (gc) {
+    const ctx = gc.getContext('2d');
+    const lines = ['&', 'sometimes i love to dj'];
+    let W, H;
+
+    function resizeCanvas() {
+      W = gc.parentElement.offsetWidth;
+      H = Math.min(W * 0.45, 500);
+      gc.width = W;
+      gc.height = H;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    const font = new FontFace('TurboDriver', "url('/fonts/turbo-driver/Turbo Driver Italic.otf')");
+    font.load().then(f => {
+      document.fonts.add(f);
+      function draw() {
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, W, H);
+
+        // Noise
+        const img = ctx.createImageData(W, H);
+        for (let i = 0; i < img.data.length; i += 4) {
+          const v = Math.random() * 20;
+          img.data[i] = v; img.data[i+1] = v; img.data[i+2] = v; img.data[i+3] = 255;
+        }
+        ctx.putImageData(img, 0, 0);
+
+        const fs = Math.min(W * 0.055, 72);
+        ctx.font = `italic ${fs}px TurboDriver`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        const ox = Math.random() > 0.88 ? (Math.random()-0.5) * 14 : 0;
+        const oy = Math.random() > 0.88 ? (Math.random()-0.5) * 8 : 0;
+
+        ctx.globalCompositeOperation = 'lighter';
+        const gap = fs * 1.4;
+        const startY = H/2 - gap * 0.5;
+        lines.forEach((line, i) => {
+          const ly = startY + i * gap + oy;
+          ctx.fillStyle = 'rgba(255,0,0,0.7)';
+          ctx.fillText(line, W/2 - 3 + ox, ly);
+          ctx.fillStyle = 'rgba(0,255,0,0.7)';
+          ctx.fillText(line, W/2 + ox, ly);
+          ctx.fillStyle = 'rgba(0,100,255,0.7)';
+          ctx.fillText(line, W/2 + 3 + ox, ly);
+        });
+        ctx.globalCompositeOperation = 'source-over';
+
+        // Glitch slices
+        if (Math.random() > 0.7) {
+          for (let i = 0; i < 3; i++) {
+            const sy = Math.random() * H;
+            const sh = Math.random() * 25 + 5;
+            const shift = (Math.random()-0.5) * 40;
+            try {
+              const slice = ctx.getImageData(0, sy, W, sh);
+              ctx.putImageData(slice, shift, sy);
+            } catch(e) {}
+          }
+        }
+
+        // Scanlines
+        ctx.fillStyle = 'rgba(0,0,0,0.15)';
+        for (let y = 0; y < H; y += 3) {
+          ctx.fillRect(0, y, W, 1);
+        }
+
+        requestAnimationFrame(draw);
+      }
+      draw();
+    });
+  }
+
   // Slideshow crossfade
   const slides = document.querySelectorAll('#slideshow .slide');
   let current = 0;
@@ -151,8 +269,9 @@ const description = "Video & Vermittlung";
     height: 100vh;
     overflow: hidden;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
+    padding-top: clamp(8rem, 25vh, 20rem);
   }
 
   .hero-video {
@@ -189,13 +308,19 @@ const description = "Video & Vermittlung";
   }
 
   .hero-title {
-    font-family: 'TerminalGrotesque', sans-serif;
-    font-size: clamp(3rem, 10vw, 8rem);
+    font-family: 'TurboDriver', 'TerminalGrotesque', sans-serif;
+    font-size: clamp(2rem, 7vw, 5.5rem);
     font-weight: normal;
     color: #fff;
     text-align: center;
     letter-spacing: 0.15em;
     line-height: 1.05;
+    overflow: hidden;
+  }
+
+  .title-line {
+    display: block;
+    opacity: 0;
   }
 
   .hero-caption {
@@ -238,7 +363,7 @@ const description = "Video & Vermittlung";
   }
 
   .welcome-text {
-    font-family: 'TerminalGrotesque', sans-serif;
+    font-family: 'TurboDriver', 'TerminalGrotesque', sans-serif;
     font-size: clamp(1.6rem, 4vw, 2.8rem);
     color: #fff;
     letter-spacing: 0.1em;
@@ -352,18 +477,113 @@ const description = "Video & Vermittlung";
     text-transform: uppercase;
   }
 
-  /* ── RESPONSIVE ── */
+  /* ── GLITCH ── */
+  .glitch-section {
+    padding: 2rem 0;
+  }
+
+  .glitch-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  #glitch-canvas {
+    width: 100%;
+    display: block;
+  }
+
+  .glitch-link {
+    display: block;
+    text-align: center;
+    margin-top: 1rem;
+    font-family: 'OfficeCodePro', sans-serif;
+    font-size: 0.85rem;
+    color: #00d2ff;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: opacity 0.3s ease;
+  }
+
+  .glitch-link:hover {
+    opacity: 0.6;
+  }
+
+  /* ── RESPONSIVE: Tablet ── */
   @media (max-width: 768px) {
-    .project-section {
-      padding: 3rem 0;
+    .hero {
+      padding-top: clamp(6rem, 20vh, 14rem);
     }
 
     .hero-title {
       font-size: clamp(2.2rem, 12vw, 4rem);
+      letter-spacing: 0.1em;
+    }
+
+    .hero-caption {
+      bottom: 4rem;
+      font-size: 0.6rem;
+    }
+
+    .welcome-section {
+      padding: 3rem 1.5rem;
+    }
+
+    .project-section {
+      padding: 3rem 0;
     }
 
     .project-full {
       padding: 0 1rem;
+      gap: 1.5rem;
+    }
+
+    .project-caption {
+      font-size: 0.7rem;
+      padding: 0 1rem;
+    }
+
+    .slideshow-section {
+      padding: 3rem 0 5rem;
+    }
+
+    .slideshow-wrap {
+      padding: 0 1rem;
+    }
+  }
+
+  /* ── RESPONSIVE: Phone ── */
+  @media (max-width: 480px) {
+    .hero {
+      padding-top: clamp(5rem, 18vh, 10rem);
+    }
+
+    .hero-title {
+      font-size: clamp(1.8rem, 14vw, 3rem);
+      letter-spacing: 0.05em;
+    }
+
+    .hero-caption {
+      bottom: 3.5rem;
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+    }
+
+    .welcome-text {
+      font-size: clamp(1.2rem, 6vw, 1.8rem);
+    }
+
+    .project-description {
+      font-size: 0.9rem;
+    }
+
+    .project-caption,
+    .slideshow-caption {
+      font-size: 0.65rem;
+    }
+
+    .slideshow {
+      aspect-ratio: 4/3;
     }
   }
 </style>
