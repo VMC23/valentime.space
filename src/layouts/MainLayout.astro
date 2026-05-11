@@ -20,6 +20,7 @@ const { title, description } = Astro.props;
   </head>
   <body>
     <canvas id="space-bg"></canvas>
+    <canvas id="hearts-bg"></canvas>
     <nav class="nav-overlay" id="main-nav">
       <a href="/" class="nav-logo"><svg viewBox="0 0 20 20" width="24" height="24"><path d="M10 18s-1.5-1.2-3.5-3.2C4 12.3 2 9.5 2 7.5 2 5 4 3 6.5 3c1.4 0 2.7.7 3.5 1.8C10.8 3.7 12.1 3 13.5 3 16 3 18 5 18 7.5c0 2-2 4.8-4.5 7.3C11.5 16.8 10 18 10 18z" fill="#fff" fill-opacity="0.9"/></svg></a>
       <button class="nav-burger" id="nav-burger" aria-label="Toggle menu" aria-expanded="false">
@@ -65,9 +66,137 @@ const { title, description } = Astro.props;
         });
       }
 
+      // Vibe state from localStorage
+      let vibeVal = parseInt(localStorage.getItem('vibeValue') || '0') / 100;
+      let vibeBgMix = vibeVal <= 0.5 ? 0 : (vibeVal - 0.5) / 0.5;
+
+      // Listen for slider changes from index page
+      window.addEventListener('vibeChange', ((e: CustomEvent) => {
+        vibeVal = e.detail.value;
+        vibeBgMix = vibeVal <= 0.5 ? 0 : (vibeVal - 0.5) / 0.5;
+        const hb = document.getElementById('hearts-bg');
+        if (hb) gsap.to(hb, { opacity: vibeVal, duration: 0.3, ease: 'power2.out', overwrite: true });
+      }) as EventListener);
+
+      // Hearts background canvas
+      const heartsBg = document.getElementById('hearts-bg') as HTMLCanvasElement;
+      if (heartsBg) {
+        gsap.set(heartsBg, { opacity: vibeVal });
+        const hctx = heartsBg.getContext('2d')!;
+        let hbW = window.innerWidth, hbH = window.innerHeight;
+        heartsBg.width = hbW;
+        heartsBg.height = hbH;
+        window.addEventListener('resize', () => {
+          hbW = window.innerWidth;
+          hbH = window.innerHeight;
+          heartsBg.width = hbW;
+          heartsBg.height = hbH;
+        });
+
+        const heartColors = [
+          'rgba(245, 169, 184, ',
+          'rgba(91, 206, 250, ',
+          'rgba(255, 255, 255, ',
+          'rgba(230, 150, 170, ',
+          'rgba(120, 190, 240, ',
+          'rgba(250, 185, 200, ',
+          'rgba(140, 210, 245, ',
+        ];
+
+        const hearts = [];
+        for (let i = 0; i < 35; i++) {
+          hearts.push({
+            x: Math.random() * hbW,
+            y: Math.random() * hbH,
+            size: Math.random() * 18 + 8,
+            speed: Math.random() * 0.3 + 0.1,
+            drift: Math.random() * 30 + 10,
+            driftSpeed: Math.random() * 0.005 + 0.002,
+            phase: Math.random() * Math.PI * 2,
+            color: heartColors[Math.floor(Math.random() * heartColors.length)],
+            opacity: Math.random() * 0.3 + 0.5,
+            rotation: Math.random() * Math.PI * 2,
+            rotSpeed: (Math.random() - 0.5) * 0.01,
+          });
+        }
+
+        function drawHeartShape(ctx, cx, cy, size) {
+          ctx.beginPath();
+          const s = size;
+          ctx.moveTo(cx, cy + s * 0.3);
+          ctx.bezierCurveTo(cx, cy - s * 0.1, cx - s * 0.5, cy - s * 0.4, cx - s * 0.5, cy - s * 0.1);
+          ctx.bezierCurveTo(cx - s * 0.5, cy + s * 0.15, cx, cy + s * 0.45, cx, cy + s * 0.6);
+          ctx.bezierCurveTo(cx, cy + s * 0.45, cx + s * 0.5, cy + s * 0.15, cx + s * 0.5, cy - s * 0.1);
+          ctx.bezierCurveTo(cx + s * 0.5, cy - s * 0.4, cx, cy - s * 0.1, cx, cy + s * 0.3);
+          ctx.closePath();
+          ctx.fill();
+        }
+
+        let ht = 0;
+        function animateHearts() {
+          ht += 0.016;
+          hctx.clearRect(0, 0, hbW, hbH);
+
+          hctx.fillStyle = '#000';
+          hctx.fillRect(0, 0, hbW, hbH);
+
+          if (vibeBgMix > 0) {
+            const bgGrad = hctx.createLinearGradient(0, 0, 0, hbH);
+            bgGrad.addColorStop(0, '#91d2f5');
+            bgGrad.addColorStop(0.25, '#f5a9b8');
+            bgGrad.addColorStop(0.5, '#ffffff');
+            bgGrad.addColorStop(0.75, '#f5a9b8');
+            bgGrad.addColorStop(1, '#91d2f5');
+            hctx.globalAlpha = vibeBgMix;
+            hctx.fillStyle = bgGrad;
+            hctx.fillRect(0, 0, hbW, hbH);
+            hctx.globalAlpha = 1;
+          }
+
+          hearts.forEach(h => {
+            h.y -= h.speed;
+            h.rotation += h.rotSpeed;
+            const swayX = Math.sin(ht * h.driftSpeed * 100 + h.phase) * h.drift;
+            if (h.y < -h.size * 2) {
+              h.y = hbH + h.size * 2;
+              h.x = Math.random() * hbW;
+            }
+            const drawX = h.x + swayX;
+
+            const glow = hctx.createRadialGradient(drawX, h.y, 0, drawX, h.y, h.size * 2.5);
+            glow.addColorStop(0, h.color + (h.opacity * 0.3).toFixed(2) + ')');
+            glow.addColorStop(1, h.color + '0)');
+            hctx.fillStyle = glow;
+            hctx.beginPath();
+            hctx.arc(drawX, h.y, h.size * 2.5, 0, Math.PI * 2);
+            hctx.fill();
+
+            hctx.save();
+            hctx.translate(drawX, h.y);
+            hctx.rotate(h.rotation);
+            hctx.fillStyle = h.color + h.opacity.toFixed(2) + ')';
+            drawHeartShape(hctx, 0, 0, h.size);
+            hctx.restore();
+          });
+
+          requestAnimationFrame(animateHearts);
+        }
+        animateHearts();
+      }
+
+      // Surprise slider — dark blue nebula with stars
+      let surpriseVal = parseInt(localStorage.getItem('surpriseValue') || '0') / 100;
+
+      window.addEventListener('surpriseChange', ((e: CustomEvent) => {
+        surpriseVal = e.detail.value;
+        const sb = document.getElementById('space-bg');
+        if (sb) gsap.to(sb, { opacity: surpriseVal, duration: 0.3, ease: 'power2.out', overwrite: true });
+      }) as EventListener);
+
       // Space background
       const spaceBg = document.getElementById('space-bg');
       if (spaceBg) {
+        gsap.set(spaceBg, { opacity: surpriseVal });
         const sctx = spaceBg.getContext('2d');
         let sw, sh;
 
@@ -169,6 +298,16 @@ const { title, description } = Astro.props;
 </html>
 
 <style>
+  #hearts-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+  }
+
   .nav-overlay {
     position: fixed;
     top: 0;
