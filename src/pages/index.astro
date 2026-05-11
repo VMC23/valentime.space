@@ -7,14 +7,33 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
 
 <Layout title={title} description={description}>
 
+  <canvas id="hearts-bg"></canvas>
+
   <!-- HERO: glitch title + video below -->
   <section class="hero">
     <div class="hero-content" id="hero-title">
       <canvas id="hero-glitch-canvas"></canvas>
+      <div class="vibe-slider-wrap">
+        <p class="vibe-question">how are you today?</p>
+        <input type="range" id="vibe-slider" min="0" max="100" value="0" class="vibe-slider" />
+        <div class="vibe-slider-labels">
+          <span class="vibe-label">black is my favourite color</span>
+          <span class="vibe-label vibe-label-right">seeking for some cuteness</span>
+        </div>
+      </div>
     </div>
     <div class="hero-video-below">
-      <video src="/ResistanceIsKey.mp4" autoplay loop muted playsinline class="hero-video"></video>
-      <p class="hero-caption hero-caption-bright" id="hero-caption">Resistance Is Key — Zurich, 2026</p>
+      <div class="flip-card flip-card-hero">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <video src="/ResistanceIsKey.mp4" autoplay loop muted playsinline class="hero-video"></video>
+            <p class="hero-caption hero-caption-bright" id="hero-caption">Resistance Is Key — Zurich, 2026</p>
+          </div>
+          <div class="flip-card-back flip-card-back-hero">
+            <p>By now I have accumulated a vast amount of video material from places that inspire me. Often static, 60 sec each. Zurich, 2026.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -147,6 +166,170 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
   gsap.set('#hero-caption', { opacity: 0 });
   gsap.to('#hero-caption', { opacity: 0.85, duration: 1, ease: 'power2.out', delay: 1.4 });
 
+  // Vibe slider — black (0) → hearts (100)
+  const vibeSlider = document.getElementById('vibe-slider') as HTMLInputElement;
+  const spaceBg = document.getElementById('space-bg');
+  const heartsBg = document.getElementById('hearts-bg') as HTMLCanvasElement;
+
+  let vibeBgMix = 0; // 0 = black bg, 1 = trans gradient bg
+
+  if (vibeSlider && heartsBg) {
+    if (spaceBg) gsap.set(spaceBg, { opacity: 0 });
+    gsap.set(heartsBg, { opacity: 0 });
+
+    const vibeQuestion = document.querySelector('.vibe-question') as HTMLElement;
+
+    vibeSlider.addEventListener('input', () => {
+      const val = parseInt(vibeSlider.value) / 100;
+      // Hearts canvas fades in across the full range
+      gsap.to(heartsBg, { opacity: val, duration: 0.3, ease: 'power2.out', overwrite: true });
+      // Background gradient only kicks in during the second half (50–100)
+      vibeBgMix = val <= 0.5 ? 0 : (val - 0.5) / 0.5;
+      // Question, labels, and slider border turn blue from midpoint
+      const blueMix = val <= 0.5 ? 0 : (val - 0.5) / 0.5;
+      const r = Math.round(255 - (255 - 91) * blueMix);
+      const g = Math.round(255 - (255 - 206) * blueMix);
+      const b = Math.round(255 - (255 - 250) * blueMix);
+      const a = 0.45 + blueMix * 0.55;
+      const color = `rgba(${r}, ${g}, ${b}, ${a})`;
+
+      if (vibeQuestion) vibeQuestion.style.color = color;
+      vibeSlider.style.borderColor = color;
+      document.querySelectorAll('.vibe-label').forEach(el => {
+        (el as HTMLElement).style.color = color;
+      });
+    });
+  }
+
+  // Hearts background canvas — cute floating hearts
+  if (heartsBg) {
+    const hctx = heartsBg.getContext('2d')!;
+    let hbW: number, hbH: number;
+
+    function resizeHeartsBg() {
+      hbW = window.innerWidth;
+      hbH = window.innerHeight;
+      heartsBg.width = hbW;
+      heartsBg.height = hbH;
+    }
+    resizeHeartsBg();
+    window.addEventListener('resize', resizeHeartsBg);
+
+    interface FloatingHeart {
+      x: number;
+      y: number;
+      size: number;
+      speed: number;
+      drift: number;
+      driftSpeed: number;
+      phase: number;
+      color: string;
+      opacity: number;
+      rotation: number;
+      rotSpeed: number;
+    }
+
+    const heartColors = [
+      'rgba(245, 169, 184, ',  // trans pink
+      'rgba(91, 206, 250, ',   // trans blue
+      'rgba(255, 255, 255, ',  // white
+      'rgba(230, 150, 170, ',  // deeper pink
+      'rgba(120, 190, 240, ',  // deeper blue
+      'rgba(250, 185, 200, ',  // soft pink
+      'rgba(140, 210, 245, ',  // soft blue
+    ];
+
+    const hearts: FloatingHeart[] = [];
+    for (let i = 0; i < 35; i++) {
+      hearts.push({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        size: Math.random() * 18 + 8,
+        speed: Math.random() * 0.3 + 0.1,
+        drift: Math.random() * 30 + 10,
+        driftSpeed: Math.random() * 0.005 + 0.002,
+        phase: Math.random() * Math.PI * 2,
+        color: heartColors[Math.floor(Math.random() * heartColors.length)],
+        opacity: Math.random() * 0.3 + 0.5,
+        rotation: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.01,
+      });
+    }
+
+    function drawHeartShape(ctx: CanvasRenderingContext2D, cx: number, cy: number, size: number) {
+      ctx.beginPath();
+      const s = size;
+      const x = cx, y = cy;
+      ctx.moveTo(x, y + s * 0.3);
+      ctx.bezierCurveTo(x, y - s * 0.1, x - s * 0.5, y - s * 0.4, x - s * 0.5, y - s * 0.1);
+      ctx.bezierCurveTo(x - s * 0.5, y + s * 0.15, x, y + s * 0.45, x, y + s * 0.6);
+      ctx.bezierCurveTo(x, y + s * 0.45, x + s * 0.5, y + s * 0.15, x + s * 0.5, y - s * 0.1);
+      ctx.bezierCurveTo(x + s * 0.5, y - s * 0.4, x, y - s * 0.1, x, y + s * 0.3);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    let ht = 0;
+    function animateHearts() {
+      ht += 0.016;
+      hctx.clearRect(0, 0, hbW, hbH);
+
+      // Blend from black to trans flag gradient based on slider position
+      hctx.fillStyle = '#000';
+      hctx.fillRect(0, 0, hbW, hbH);
+
+      if (vibeBgMix > 0) {
+        const bgGrad = hctx.createLinearGradient(0, 0, 0, hbH);
+        bgGrad.addColorStop(0, '#91d2f5');     // pastel blue
+        bgGrad.addColorStop(0.25, '#f5a9b8');  // pastel pink
+        bgGrad.addColorStop(0.5, '#ffffff');    // white
+        bgGrad.addColorStop(0.75, '#f5a9b8');  // pastel pink
+        bgGrad.addColorStop(1, '#91d2f5');     // pastel blue
+        hctx.globalAlpha = vibeBgMix;
+        hctx.fillStyle = bgGrad;
+        hctx.fillRect(0, 0, hbW, hbH);
+        hctx.globalAlpha = 1;
+      }
+
+      hearts.forEach(h => {
+        // Float upward slowly
+        h.y -= h.speed;
+        h.rotation += h.rotSpeed;
+
+        // Gentle horizontal sway
+        const swayX = Math.sin(ht * h.driftSpeed * 100 + h.phase) * h.drift;
+
+        // Reset when off screen
+        if (h.y < -h.size * 2) {
+          h.y = hbH + h.size * 2;
+          h.x = Math.random() * hbW;
+        }
+
+        const drawX = h.x + swayX;
+
+        // Soft glow behind the heart
+        const glow = hctx.createRadialGradient(drawX, h.y, 0, drawX, h.y, h.size * 2.5);
+        glow.addColorStop(0, h.color + (h.opacity * 0.3).toFixed(2) + ')');
+        glow.addColorStop(1, h.color + '0)');
+        hctx.fillStyle = glow;
+        hctx.beginPath();
+        hctx.arc(drawX, h.y, h.size * 2.5, 0, Math.PI * 2);
+        hctx.fill();
+
+        // Draw the heart
+        hctx.save();
+        hctx.translate(drawX, h.y);
+        hctx.rotate(h.rotation);
+        hctx.fillStyle = h.color + h.opacity.toFixed(2) + ')';
+        drawHeartShape(hctx, 0, 0, h.size);
+        hctx.restore();
+      });
+
+      requestAnimationFrame(animateHearts);
+    }
+    animateHearts();
+  }
+
   // Hero glitch canvas — same style as DJ glitch
   const hgc = document.getElementById('hero-glitch-canvas');
   if (hgc) {
@@ -213,11 +396,6 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
           }
         }
 
-        // Scanlines
-        hctx.fillStyle = 'rgba(0,0,0,0.15)';
-        for (let y = 0; y < hH; y += 3) {
-          hctx.fillRect(0, y, hW, 1);
-        }
 
         requestAnimationFrame(drawHero);
       }
@@ -319,11 +497,6 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
           }
         }
 
-        // Scanlines
-        ctx.fillStyle = 'rgba(0,0,0,0.15)';
-        for (let y = 0; y < H; y += 3) {
-          ctx.fillRect(0, y, W, 1);
-        }
 
         requestAnimationFrame(draw);
       }
@@ -395,11 +568,6 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
         }
       }
 
-      // Scanlines
-      hrt.fillStyle = 'rgba(0,0,0,0.1)';
-      for (let y = 0; y < hh; y += 3) {
-        hrt.fillRect(0, y, hw, 1);
-      }
 
       requestAnimationFrame(animateHeart);
     }
@@ -456,10 +624,150 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
     display: block;
   }
 
+  /* ── VIBE SLIDER ── */
+  .vibe-slider-wrap {
+    width: 100%;
+    max-width: 400px;
+    margin: 1.5rem auto 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0 1rem;
+  }
+
+  .vibe-question {
+    font-family: 'OfficeCodePro', sans-serif;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: lowercase;
+    letter-spacing: 0.12em;
+    text-align: center;
+  }
+
+  .vibe-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 8px;
+    margin: 0;
+    background-clip: content-box;
+    touch-action: none;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 20px;
+  }
+
+  .vibe-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 12px rgba(0, 210, 255, 0.6), 0 0 25px rgba(0, 210, 255, 0.3);
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+  }
+
+  .vibe-slider::-webkit-slider-thumb:hover {
+    box-shadow: 0 0 16px rgba(0, 210, 255, 0.9), 0 0 35px rgba(0, 210, 255, 0.5);
+    transform: scale(1.15);
+  }
+
+  .vibe-slider::-webkit-slider-thumb:active {
+    transform: scale(1.3);
+    box-shadow: 0 0 20px rgba(0, 210, 255, 1), 0 0 45px rgba(0, 210, 255, 0.6);
+  }
+
+  .vibe-slider::-moz-range-thumb {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #fff;
+    border: none;
+    box-shadow: 0 0 12px rgba(0, 210, 255, 0.6), 0 0 25px rgba(0, 210, 255, 0.3);
+    cursor: pointer;
+  }
+
+  .vibe-slider::-moz-range-track {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    border: none;
+  }
+
+  .vibe-slider-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .vibe-label {
+    font-family: 'OfficeCodePro', sans-serif;
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.45);
+    text-transform: lowercase;
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  .vibe-label-center {
+    text-align: center;
+  }
+
+  .vibe-label-right {
+    text-align: right;
+  }
+
+  /* Hearts background canvas */
+  #hearts-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+  }
+
   .hero-video-below {
     width: 100%;
     max-width: 1200px;
     padding: 3rem 2rem 0;
+  }
+
+  .flip-card-hero {
+    width: 100%;
+  }
+
+  .flip-card-hero .flip-card-front {
+    position: relative;
+  }
+
+  .flip-card-back-hero {
+    background: #000;
+    padding: 2.5rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .flip-card-back-hero p {
+    font-family: 'OfficeCodePro', sans-serif;
+    font-size: clamp(0.65rem, 1.8vw, 0.85rem);
+    color: #ccc;
+    text-align: center;
+    line-height: 1.8;
+    letter-spacing: 0.03em;
+    width: 100%;
+    max-width: none;
   }
 
   .hero-video {
@@ -772,6 +1080,36 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
 
     .hero-content {
       padding: 0 0.75rem;
+    }
+
+    .vibe-slider-wrap {
+      max-width: 85vw;
+      margin-top: 1rem;
+      padding: 0 0.5rem;
+    }
+
+    .vibe-question {
+      font-size: 0.8rem;
+    }
+
+    .vibe-slider {
+      padding: 18px 0;
+      height: 5px;
+    }
+
+    .vibe-slider::-webkit-slider-thumb {
+      width: 32px;
+      height: 32px;
+    }
+
+    .vibe-slider::-moz-range-thumb {
+      width: 32px;
+      height: 32px;
+    }
+
+    .vibe-label {
+      font-size: 0.6rem;
+      max-width: 48%;
     }
 
     .hero-video-below {
