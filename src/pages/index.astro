@@ -30,7 +30,7 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
             <p class="hero-caption hero-caption-bright" id="hero-caption">Resistance Is Key — Zurich, 2026</p>
           </div>
           <div class="flip-card-back flip-card-back-hero">
-            <p>By now I have accumulated a vast amount of video material from places that inspire me. Often static, 60 sec each. Zurich, 2026.</p>
+            <p>By now I have accumulated a vast amount of video material from places that inspire me. Often static, 60 sec each.<br><span class="flip-back-meta">Zurich, 2026.</span></p>
           </div>
         </div>
       </div>
@@ -51,7 +51,7 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
             <video src="/gender_Diversity Cinema.mp4" autoplay loop muted playsinline class="project-video"></video>
           </div>
           <div class="flip-card-back">
-            <p>Diversity Cinema «Wie wir die Welt berühren...», Kino Toni, 2026.</p>
+            <p>Diversity Cinema «Wie wir die Welt berühren...»<br><span class="flip-back-meta">Kino Toni, 2026.</span><br><span class="flip-back-note">* This film (4') about the nervous system is part of my ongoing<br>research for a new theatre project, with Anna Papst.</span></p>
           </div>
         </div>
       </div>
@@ -67,7 +67,7 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
             <video src="/Decolonial Website Vid.mov" autoplay loop muted playsinline class="project-video"></video>
           </div>
           <div class="flip-card-back">
-            <p>Performance und Video, Diversity Politics and the Arts: Post-colonial Perspectives, ZHdK, 2026.</p>
+            <p>Performance on whiteness, Diversity Politics and the Arts: Post-colonial Perspectives<br><span class="flip-back-meta">ZHdK, 2026.</span><br><span class="flip-back-note">* I performed a piece about whiteness in my final minor of the<br>Master Critical Social Practice at ZHdK.<br>PS: The course video also features some of my video work — <a href="https://youtu.be/yPkTUs8QsM8?si=N6rI8Ovv-YAXRmGH" target="_blank" rel="noopener" class="flip-back-link" onclick="event.stopPropagation()">have a look &rarr;</a></span></p>
           </div>
         </div>
       </div>
@@ -83,7 +83,7 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
             <video src="/Moods_Video.mp4" autoplay loop muted playsinline class="project-video"></video>
           </div>
           <div class="flip-card-back">
-            <p>Ali Dada, Concert @ Moods, 2025.</p>
+            <p>Ali Dada, Concert<br><span class="flip-back-meta">Moods, 2025.</span><br><span class="flip-back-note">* My dear friends played a beautiful gig and I filmed it — using real<br>crystals in front of the lens for the psychedelic effects.</span></p>
           </div>
         </div>
       </div>
@@ -99,7 +99,7 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
             <video src="/ALLIN_clip.mp4" autoplay loop muted playsinline class="project-video"></video>
           </div>
           <div class="flip-card-back">
-            <p>ALL IN — Elon Liberman, Musée Visionnaire, 2025.</p>
+            <p>ALL IN — Elon Liberman<br><span class="flip-back-meta">Musée Visionnaire, 2025.</span><br><span class="flip-back-note">* Happy to have filmed such a playful sound machine and artist.<br>Video for an installation at the Musée Visionnaire.</span></p>
           </div>
         </div>
       </div>
@@ -115,7 +115,7 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
             <video src="/Blob Berlin Video.mp4" autoplay loop muted playsinline class="project-video"></video>
           </div>
           <div class="flip-card-back">
-            <p>Blob, hergestellt mit den Besucher:innen auf der documenta fifteen, mit: Kollektiv Loom Loop.<br>Video: Berlin, 2023.</p>
+            <p>Blob, documenta fifteen<br><span class="flip-back-meta">Berlin, 2023.</span><br><span class="flip-back-note">* Grateful to be part of Kollektiv Loom Loop, which has grown into<br>a beautiful familial friendship. The final carpet was filmed in Berlin,<br>one year after its completion — <a href="https://loomloop.de/" target="_blank" rel="noopener" class="flip-back-link" onclick="event.stopPropagation()">check it out &rarr;</a></span></p>
           </div>
         </div>
       </div>
@@ -761,13 +761,39 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
 
   .flip-card-back-hero p {
     font-family: 'OfficeCodePro', sans-serif;
-    font-size: clamp(0.65rem, 1.8vw, 0.85rem);
+    font-size: clamp(0.55rem, 1.5vw, 0.75rem);
     color: #ccc;
     text-align: center;
     line-height: 1.8;
     letter-spacing: 0.03em;
     width: 100%;
     max-width: none;
+  }
+
+  .flip-back-meta {
+    font-size: clamp(0.7rem, 2vw, 1rem);
+    color: #fff;
+    letter-spacing: 0.08em;
+  }
+
+  .flip-back-note {
+    display: inline-block;
+    margin-top: 0.6rem;
+    font-size: clamp(0.55rem, 1.5vw, 0.7rem);
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+    letter-spacing: 0.02em;
+  }
+
+  .flip-back-link {
+    color: #00d2ff;
+    text-decoration: none;
+    font-style: italic;
+    transition: opacity 0.3s ease;
+  }
+
+  .flip-back-link:hover {
+    opacity: 0.6;
   }
 
   .hero-video {
