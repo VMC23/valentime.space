@@ -121,6 +121,25 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
     </div>
   </section>
 
+  <!-- GLITCH: GitHub -->
+  <section class="project-section glitch-section" data-anim>
+    <div class="glitch-wrap">
+      <div class="flip-card flip-card-glitch">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <canvas id="github-glitch-canvas"></canvas>
+          </div>
+          <div class="flip-card-back">
+            <div class="flip-back-content">
+              <p>where the code lives</p>
+              <a href="https://github.com/VMC23" target="_blank" rel="noopener" class="glitch-link" onclick="event.stopPropagation()">github &rarr;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- PROJECT: Blob Berlin -->
   <section class="project-section" data-anim>
     <div class="project-full">
@@ -330,6 +349,68 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
       );
     }
   });
+
+  // GitHub glitch canvas
+  const ghc = document.getElementById('github-glitch-canvas');
+  if (ghc) {
+    const ghctx = ghc.getContext('2d');
+    const ghLines = ['check out my github', '& show me yours!'];
+    let ghW, ghH;
+
+    function resizeGhCanvas() {
+      ghW = ghc.parentElement.offsetWidth;
+      ghH = ghW < 480 ? Math.min(ghW * 0.55, 300) : Math.min(ghW * 0.45, 500);
+      ghc.width = ghW;
+      ghc.height = ghH;
+    }
+    resizeGhCanvas();
+    window.addEventListener('resize', resizeGhCanvas);
+
+    const ghFont = new FontFace('TurboDriver', "url('/fonts/turbo-driver/Turbo Driver Italic.otf')");
+    ghFont.load().then(f => {
+      document.fonts.add(f);
+      function drawGh() {
+        ghctx.clearRect(0, 0, ghW, ghH);
+
+        const fs = ghW < 480 ? Math.min(ghW * 0.08, 42) : Math.min(ghW * 0.055, 72);
+        ghctx.font = `italic ${fs}px TurboDriver`;
+        ghctx.textAlign = 'center';
+        ghctx.textBaseline = 'middle';
+
+        const ox = Math.random() > 0.88 ? (Math.random()-0.5) * 14 : 0;
+        const oy = Math.random() > 0.88 ? (Math.random()-0.5) * 8 : 0;
+
+        ghctx.globalCompositeOperation = 'lighter';
+        const gap = fs * 1.4;
+        const startY = ghH/2 - gap * 0.5;
+        ghLines.forEach((line, i) => {
+          const ly = startY + i * gap + oy;
+          ghctx.fillStyle = 'rgba(255,0,0,0.7)';
+          ghctx.fillText(line, ghW/2 - 3 + ox, ly);
+          ghctx.fillStyle = 'rgba(0,255,0,0.7)';
+          ghctx.fillText(line, ghW/2 + ox, ly);
+          ghctx.fillStyle = 'rgba(0,100,255,0.7)';
+          ghctx.fillText(line, ghW/2 + 3 + ox, ly);
+        });
+        ghctx.globalCompositeOperation = 'source-over';
+
+        if (Math.random() > 0.7) {
+          for (let i = 0; i < 3; i++) {
+            const sy = Math.random() * ghH;
+            const sh = Math.random() * 25 + 5;
+            const shift = (Math.random()-0.5) * 40;
+            try {
+              const slice = ghctx.getImageData(0, sy, ghW, sh);
+              ghctx.putImageData(slice, shift, sy);
+            } catch(e) {}
+          }
+        }
+
+        requestAnimationFrame(drawGh);
+      }
+      drawGh();
+    });
+  }
 
   // Glitch canvas
   const gc = document.getElementById('glitch-canvas');
