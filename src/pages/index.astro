@@ -70,6 +70,22 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
     </div>
   </section>
 
+  <!-- WHY ARE YOU HERE? -->
+  <section class="why-here-section" data-anim>
+    <div class="why-here-wrap">
+      <p class="why-here-question" id="why-here-q">Why are you here on my page?</p>
+      <div class="why-here-buttons" id="why-here-buttons">
+        <button class="why-btn" data-reply="Nice! Let's talk → <a href='/about'>about</a>">I need a website</button>
+        <button class="why-btn" data-reply="Go ahead, I have nothing to hide... well, almost nothing.">I want to spy on you</button>
+        <button class="why-btn" data-reply="Great — keep scrolling, there's plenty of good reasons.">I'm considering whether to give you funding</button>
+        <button class="why-btn" data-reply="That's sweet ♡">I think you're cute</button>
+        <button class="why-btn" data-reply="Scroll down to the DJ section or check <a href='https://soundcloud.com/kracy-caro-valentines' target='_blank' rel='noopener'>SoundCloud</a> →">I want to hear your DJ sets</button>
+        <button class="why-btn" data-reply="Fair enough — enjoy the ride.">Other reason</button>
+      </div>
+      <p class="why-here-reply" id="why-here-reply"></p>
+    </div>
+  </section>
+
   <!-- PROJECT: Moods -->
   <section class="project-section" data-anim>
     <div class="project-full">
@@ -445,6 +461,21 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
     }
     animateHeart();
   }
+
+  // Why are you here? buttons
+  const whyButtons = document.querySelectorAll('.why-btn');
+  const whyReply = document.getElementById('why-here-reply');
+  whyButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const reply = btn.getAttribute('data-reply') || '';
+      if (whyReply) {
+        whyReply.innerHTML = reply;
+        whyReply.classList.add('visible');
+      }
+      whyButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
 
   // Refresh ScrollTrigger after videos/fonts load to fix position calculations
   window.addEventListener('load', () => {
@@ -869,6 +900,83 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
   }
 
 
+  /* ── WHY ARE YOU HERE ── */
+  .why-here-section {
+    padding: 4rem 0;
+  }
+
+  .why-here-wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    text-align: center;
+  }
+
+  .why-here-question {
+    font-family: 'OfficeCodePro', sans-serif;
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.1em;
+    margin-bottom: 2rem;
+  }
+
+  .why-here-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.8rem;
+  }
+
+  .why-btn {
+    font-family: 'OfficeCodePro', sans-serif;
+    font-size: 0.75rem;
+    color: #fff;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 20px;
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: border-color 0.3s ease, background 0.3s ease, color 0.3s ease;
+  }
+
+  .why-btn:hover {
+    border-color: #00d2ff;
+    color: #00d2ff;
+  }
+
+  .why-btn.active {
+    background: rgba(0, 210, 255, 0.15);
+    border-color: #00d2ff;
+    color: #00d2ff;
+  }
+
+  .why-here-reply {
+    font-family: 'OfficeCodePro', sans-serif;
+    font-size: clamp(0.8rem, 2vw, 0.95rem);
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 1.8rem;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    line-height: 1.6;
+  }
+
+  .why-here-reply.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .why-here-reply :global(a) {
+    color: #00d2ff;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .why-here-reply :global(a:hover) {
+    opacity: 0.6;
+  }
+
   /* ── ABOUT CTA ── */
   .about-cta {
     text-align: center;
@@ -1074,6 +1182,19 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
 
     .glitch-section {
       padding: 1rem 0;
+    }
+
+    .why-here-section {
+      padding: 2rem 0;
+    }
+
+    .why-here-wrap {
+      padding: 0 1rem;
+    }
+
+    .why-btn {
+      font-size: 0.7rem;
+      padding: 0.55rem 1rem;
     }
 
     .site-footer {
