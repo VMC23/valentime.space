@@ -20,9 +20,6 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
         </div>
       </div>
     </div>
-    <div class="hero-heart-wrap">
-      <canvas id="heart-glitch-canvas"></canvas>
-    </div>
     <div class="hero-video-below">
       <div class="flip-card flip-card-hero">
         <div class="flip-card-inner">
@@ -35,6 +32,9 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
           </div>
         </div>
       </div>
+    </div>
+    <div class="hero-heart-wrap">
+      <canvas id="heart-glitch-canvas"></canvas>
     </div>
   </section>
 
@@ -83,7 +83,7 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
         <button class="why-btn" data-reply="Same. At least you're doing it with taste.">I'm procrastinating</button>
         <button class="why-btn" data-reply="I want to collaborate → <a href='/about'>let's talk</a>">I want to collaborate</button>
         <button class="why-btn" data-reply="Tell them I said hi.">My professor sent me here</button>
-        <button class="why-btn" data-reply="Hi Mom ♡">I'm your friend &lt;3</button>
+        <button class="why-btn" data-reply="Hello my friend ♡">I'm your friend &lt;3</button>
       </div>
       <p class="why-here-reply" id="why-here-reply"></p>
     </div>
@@ -131,7 +131,7 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
           </div>
           <div class="flip-card-back">
             <div class="flip-back-content">
-              <p>where the code lives</p>
+              <p>yes, this site is handmade</p>
               <a href="https://github.com/VMC23" target="_blank" rel="noopener" class="glitch-link" onclick="event.stopPropagation()">github &rarr;</a>
             </div>
           </div>
@@ -173,6 +173,10 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
         </div>
       </div>
     </div>
+  </section>
+
+  <section class="ps-section" data-anim>
+    <p class="ps-text">PS: Switch to decentralised systems and take good care of your beautiful networks! It's going to be messy and adventurous.</p>
   </section>
 
   <section class="about-cta" data-anim>
@@ -354,7 +358,9 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
   const ghc = document.getElementById('github-glitch-canvas');
   if (ghc) {
     const ghctx = ghc.getContext('2d');
-    const ghLines = ['check out my github', '& show me yours!'];
+    function getGhLines() {
+      return ghW < 500 ? ['check out', 'my github &', 'show me yours!'] : ['check out my github', '& show me yours!'];
+    }
     let ghW, ghH;
 
     function resizeGhCanvas() {
@@ -372,7 +378,8 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
       function drawGh() {
         ghctx.clearRect(0, 0, ghW, ghH);
 
-        const fs = ghW < 480 ? Math.min(ghW * 0.08, 42) : Math.min(ghW * 0.055, 72);
+        const ghLines = getGhLines();
+        const fs = ghW < 500 ? Math.min(ghW * 0.065, 32) : Math.min(ghW * 0.055, 72);
         ghctx.font = `italic ${fs}px TurboDriver`;
         ghctx.textAlign = 'center';
         ghctx.textBaseline = 'middle';
@@ -382,7 +389,8 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
 
         ghctx.globalCompositeOperation = 'lighter';
         const gap = fs * 1.4;
-        const startY = ghH/2 - gap * 0.5;
+        const totalHeight = (ghLines.length - 1) * gap;
+        const startY = ghH/2 - totalHeight / 2;
         ghLines.forEach((line, i) => {
           const ly = startY + i * gap + oy;
           ghctx.fillStyle = 'rgba(255,0,0,0.7)';
@@ -416,7 +424,9 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
   const gc = document.getElementById('glitch-canvas');
   if (gc) {
     const ctx = gc.getContext('2d');
-    const lines = ['&', 'sometimes i love to dj'];
+    function getDjLines() {
+      return W < 500 ? ['&', 'sometimes', 'i love to dj'] : ['&', 'sometimes i love to dj'];
+    }
     let W, H;
 
     function resizeCanvas() {
@@ -434,7 +444,8 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
       function draw() {
         ctx.clearRect(0, 0, W, H);
 
-        const fs = W < 480 ? Math.min(W * 0.08, 42) : Math.min(W * 0.055, 72);
+        const lines = getDjLines();
+        const fs = W < 500 ? Math.min(W * 0.065, 32) : Math.min(W * 0.055, 72);
         ctx.font = `italic ${fs}px TurboDriver`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -444,7 +455,8 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
 
         ctx.globalCompositeOperation = 'lighter';
         const gap = fs * 1.4;
-        const startY = H/2 - gap * 0.5;
+        const totalHeight = (lines.length - 1) * gap;
+        const startY = H/2 - totalHeight / 2;
         lines.forEach((line, i) => {
           const ly = startY + i * gap + oy;
           ctx.fillStyle = 'rgba(255,0,0,0.7)';
@@ -1059,6 +1071,22 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
 
   .why-here-reply :global(a:hover) {
     opacity: 0.6;
+  }
+
+  /* ── PS ── */
+  .ps-section {
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+
+  .ps-text {
+    font-family: 'OfficeCodePro', sans-serif;
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.8;
+    max-width: 520px;
+    margin: 0 auto;
+    letter-spacing: 0.1em;
   }
 
   /* ── ABOUT CTA ── */
