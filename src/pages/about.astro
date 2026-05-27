@@ -10,57 +10,20 @@ import Layout from '../layouts/MainLayout.astro';
     <hr class="divider">
 
     <p class="bio">I move through spaces — listening, watching, filming, cleaning, speaking, teaching — where social practices are questioned and explored. Embracing the queer art of failure.</p>
-    <div class="cv-frame">
+    <div class="contact-block">
       <p class="frame-heading">cv or collab? say hi.</p>
-      <p class="frame-email">valentime@tutamail.com</p>
-
-      <hr class="frame-divider">
-
-      <div class="collab-grid">
-        <div class="collab-group">
-          <h3 class="collab-category">Institutions & Education</h3>
-          <ul class="collab-list">
-            <li>Plant Science Center, ETH</li>
-            <li>Verweben, ZHdK</li>
-            <li>Recht auf Wir, ZHdK</li>
-            <li>Design for Democracy</li>
-            <li>Bezirksschule Baden</li>
-          </ul>
-        </div>
-
-        <div class="collab-group">
-          <h3 class="collab-category">Venues & Culture</h3>
-          <ul class="collab-list">
-            <li>Schauspielhaus Zürich</li>
-            <li>Gessnerallee</li>
-            <li>Photobastei</li>
-            <li>Musée Visionnaire</li>
-            <li>Zukunftsdorf22, Documenta fifteen</li>
-          </ul>
-        </div>
-
-        <div class="collab-group">
-          <h3 class="collab-category">Festivals & Nightlife</h3>
-          <ul class="collab-list">
-            <li>Château Festival</li>
-            <li>Hedonistische Internationale</li>
-            <li>Underground Raves</li>
-          </ul>
-        </div>
-
-        <div class="collab-group">
-          <h3 class="collab-category">Media & Industry</h3>
-          <ul class="collab-list">
-            <li>Fotogen Model Agency</li>
-            <li>Goldbach Media</li>
-          </ul>
-        </div>
-
-      </div>
+      <p class="frame-email" id="copy-email" data-email="valentime@tutamail.com">valentime@tutamail.com</p>
     </div>
 
     <a href="/blog" class="blog-link">+blog</a>
   </main>
+
+  <div class="collab-marquee">
+    <div class="collab-marquee-inner">
+      <span class="collab-marquee-text">ETH &nbsp;·&nbsp; ZHdK &nbsp;·&nbsp; Schauspielhaus Zürich &nbsp;·&nbsp; Documenta fifteen &nbsp;·&nbsp; Gessnerallee &nbsp;·&nbsp; Photobastei &nbsp;·&nbsp; Musée Visionnaire &nbsp;·&nbsp; Château Festival &nbsp;·&nbsp; Design for Democracy &nbsp;·&nbsp; Hedonistische Internationale &nbsp;·&nbsp; Bezirksschule Baden &nbsp;·&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      <span class="collab-marquee-text">ETH &nbsp;·&nbsp; ZHdK &nbsp;·&nbsp; Schauspielhaus Zürich &nbsp;·&nbsp; Documenta fifteen &nbsp;·&nbsp; Gessnerallee &nbsp;·&nbsp; Photobastei &nbsp;·&nbsp; Musée Visionnaire &nbsp;·&nbsp; Château Festival &nbsp;·&nbsp; Design for Democracy &nbsp;·&nbsp; Hedonistische Internationale &nbsp;·&nbsp; Bezirksschule Baden &nbsp;·&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    </div>
+  </div>
 </Layout>
 
 <script>
@@ -78,11 +41,20 @@ import Layout from '../layouts/MainLayout.astro';
   gsap.set('.about .bio', { opacity: 0, y: 20 });
   gsap.to('.about .bio', { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out', delay: 1.2, stagger: 0.15 });
 
-  gsap.set('.cv-frame', { opacity: 0, y: 30 });
-  gsap.to('.cv-frame', { opacity: 1, y: 0, duration: 1, ease: 'power2.out', delay: 1.6 });
+  gsap.set('.contact-block', { opacity: 0, y: 30 });
+  gsap.to('.contact-block', { opacity: 1, y: 0, duration: 1, ease: 'power2.out', delay: 1.6 });
 
-  gsap.set('.collab-group', { opacity: 0, y: 15 });
-  gsap.to('.collab-group', { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out', delay: 2, stagger: 0.12 });
+  gsap.set('.collab-marquee', { opacity: 0 });
+  gsap.to('.collab-marquee', { opacity: 1, duration: 1, ease: 'power2.out', delay: 2 });
+
+  const copyEl = document.getElementById('copy-email');
+  if (copyEl) {
+    copyEl.addEventListener('click', () => {
+      navigator.clipboard.writeText(copyEl.dataset.email);
+      copyEl.textContent = 'copied!';
+      setTimeout(() => { copyEl.textContent = copyEl.dataset.email; }, 1500);
+    });
+  }
 </script>
 
 <style>
@@ -136,13 +108,8 @@ import Layout from '../layouts/MainLayout.astro';
     margin-bottom: 1rem;
   }
 
-  .cv-frame {
-    width: 100%;
-    max-width: 600px;
+  .contact-block {
     margin-top: 3rem;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 12px;
-    padding: 2.5rem 2rem;
   }
 
   .frame-heading {
@@ -158,57 +125,39 @@ import Layout from '../layouts/MainLayout.astro';
     font-size: clamp(0.85rem, 2vw, 1rem);
     color: #00d2ff;
     letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
   }
 
-  .frame-divider {
-    border: none;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.12);
-    margin: 2rem 0;
+  .frame-email:hover {
+    opacity: 0.6;
   }
 
-  .collab-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.8rem 2.5rem;
-    text-align: left;
+  .collab-marquee {
+    width: 100%;
+    overflow: hidden;
+    padding: 3rem 0 2rem;
   }
 
-  .collab-group {
+  .collab-marquee-inner {
     display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
+    width: max-content;
+    animation: collab-scroll 35s linear infinite;
   }
 
-  .collab-category {
+  .collab-marquee-text {
     font-family: 'OfficeCodePro', sans-serif;
-    font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.4);
+    font-size: clamp(0.65rem, 1.5vw, 0.8rem);
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
-    margin-bottom: 0.3rem;
-    font-weight: normal;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 
-  .collab-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .collab-list li {
-    font-family: 'OfficeCodePro', sans-serif;
-    font-size: clamp(0.75rem, 2vw, 0.85rem);
-    color: rgba(255, 255, 255, 0.75);
-    line-height: 1.5;
-  }
-
-  .pps {
-    margin-top: 2rem;
-    color: #00d2ff;
+  @keyframes collab-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
   }
 
   .blog-link {
@@ -224,27 +173,6 @@ import Layout from '../layouts/MainLayout.astro';
   .blog-link:hover {
     opacity: 0.5;
   }
-
-  .collab-field {
-    position: relative;
-    width: min(98vw, 1000px);
-    height: 45vh;
-    min-height: 350px;
-    border: none;
-    border-radius: 50%;
-    margin: 0 auto;
-    overflow: hidden;
-  }
-
-  .collab-name {
-    position: absolute;
-    font-family: 'OfficeCodePro', sans-serif;
-    font-size: inherit;
-    color: #eee;
-    white-space: nowrap;
-    opacity: 0;
-  }
-
 
   @media (max-width: 768px) {
     .about {
@@ -265,13 +193,11 @@ import Layout from '../layouts/MainLayout.astro';
     .bio {
       line-height: 1.7;
     }
-    .cv-frame {
-      padding: 1.8rem 1.2rem;
+    .contact-block {
       margin-top: 2rem;
     }
-    .collab-grid {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
+    .collab-marquee-inner {
+      animation-duration: 18s;
     }
   }
 </style>
