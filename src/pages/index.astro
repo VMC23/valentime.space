@@ -75,11 +75,9 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
     <div class="why-here-wrap">
       <p class="why-here-question" id="why-here-q">Why are you here on my page?</p>
       <div class="why-here-buttons" id="why-here-buttons">
-        <button class="why-btn" data-reply="Nice! Let's talk → <a href='/about'>about</a>">I need a website</button>
-        <button class="why-btn" data-reply="Go ahead, I have nothing to hide.">I want to spy on you</button>
+        <button class="why-btn" data-reply="Good luck!">I want to spy on you</button>
         <button class="why-btn" data-reply="Great — keep scrolling, there's plenty of good reasons.">I'm considering whether to give you funding</button>
         <button class="why-btn" data-reply="That's sweet ♡">I think you're cute</button>
-        <button class="why-btn" data-reply="Scroll down to the DJ section or check <a href='https://soundcloud.com/kracy-caro-valentines' target='_blank' rel='noopener'>SoundCloud</a> →">I want to hear your DJ sets</button>
         <button class="why-btn" data-reply="Same. At least you're doing it with taste.">I'm procrastinating</button>
         <button class="why-btn" data-reply="I want to collaborate → <a href='/about'>let's talk</a>">I want to collaborate</button>
         <button class="why-btn" data-reply="Tell them I said hi.">My professor sent me here</button>
@@ -176,7 +174,12 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
   </section>
 
   <section class="ps-section" data-anim>
-    <p class="ps-text">PS: Switch to decentralised systems and take good care of your beautiful networks! It's going to be messy and adventurous.</p>
+    <div class="ps-marquee">
+      <div class="ps-marquee-inner">
+        <span class="ps-marquee-text">PS: Switch to decentralised systems and take good care of your beautiful networks! It's going to be messy and adventurous.&nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;</span>
+        <span class="ps-marquee-text">PS: Switch to decentralised systems and take good care of your beautiful networks! It's going to be messy and adventurous.&nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;</span>
+      </div>
+    </div>
   </section>
 
   <section class="about-cta" data-anim>
@@ -831,11 +834,11 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
 
   /* ── PROJECT SECTIONS ── */
   .project-section {
-    padding: 10rem 0;
+    padding: 14rem 0;
   }
 
   .project-full {
-    max-width: 1200px;
+    max-width: 960px;
     margin: 0 auto;
     padding: 0 2rem;
     display: flex;
@@ -998,7 +1001,7 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
 
   /* ── WHY ARE YOU HERE ── */
   .why-here-section {
-    padding: 4rem 0;
+    padding: 8rem 0;
   }
 
   .why-here-wrap {
@@ -1073,20 +1076,42 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
     opacity: 0.6;
   }
 
-  /* ── PS ── */
+  /* ── PS MARQUEE ── */
   .ps-section {
-    padding: 3rem 2rem;
-    text-align: center;
+    padding: 6rem 0 3rem;
+    overflow: hidden;
   }
 
-  .ps-text {
-    font-family: 'OfficeCodePro', sans-serif;
-    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-    color: rgba(255, 255, 255, 0.7);
-    line-height: 1.8;
-    max-width: 520px;
-    margin: 0 auto;
-    letter-spacing: 0.1em;
+  .ps-marquee {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .ps-marquee-inner {
+    display: flex;
+    width: max-content;
+    animation: ps-scroll 30s linear infinite;
+  }
+
+  .ps-marquee-text {
+    font-family: 'TurboDriver', 'TerminalGrotesque', sans-serif;
+    font-size: clamp(1.2rem, 3vw, 2.2rem);
+    color: rgba(255, 255, 255, 0.35);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  @keyframes ps-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  @media (max-width: 480px) {
+    .ps-marquee-inner {
+      animation-duration: 15s;
+    }
   }
 
   /* ── ABOUT CTA ── */
@@ -1111,7 +1136,7 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
 
   /* ── GLITCH ── */
   .glitch-section {
-    padding: 2rem 0;
+    padding: 6rem 0;
   }
 
   .glitch-wrap {
@@ -1167,7 +1192,7 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
     }
 
     .project-section {
-      padding: 5rem 0;
+      padding: 8rem 0;
     }
 
     .project-full {
@@ -1249,7 +1274,7 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
     }
 
     .project-section {
-      padding: 3.5rem 0;
+      padding: 5rem 0;
     }
 
     .project-full {
@@ -1293,11 +1318,11 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
     }
 
     .glitch-section {
-      padding: 1rem 0;
+      padding: 3rem 0;
     }
 
     .why-here-section {
-      padding: 2rem 0;
+      padding: 4rem 0;
     }
 
     .why-here-wrap {
