@@ -173,11 +173,18 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
     </div>
   </section>
 
+  <section class="project-section hedo-section" data-anim>
+    <div class="hedo-wrap">
+      <video src="/hedo lawine.mp4" autoplay loop muted playsinline class="hedo-video" id="hedo-video"></video>
+      <button class="sound-toggle" id="sound-toggle">sound on</button>
+    </div>
+  </section>
+
   <section class="ps-section" data-anim>
     <div class="ps-marquee">
       <div class="ps-marquee-inner">
-        <span class="ps-marquee-text">PS: Switch to decentralised systems and take good care of your beautiful networks! It's going to be messy and adventurous.&nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;</span>
-        <span class="ps-marquee-text">PS: Switch to decentralised systems and take good care of your beautiful networks! It's going to be messy and adventurous.&nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;</span>
+        <span class="ps-marquee-text">PS: Switch to decentralized systems and take care of your beautiful networks! It's going to be messy and adventurous.&nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;</span>
+        <span class="ps-marquee-text">PS: Switch to decentralized systems and take care of your beautiful networks! It's going to be messy and adventurous.&nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;</span>
       </div>
     </div>
   </section>
@@ -575,6 +582,19 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
       btn.classList.add('active');
     });
   });
+
+  // Hedo video sound toggle
+  const hedoVideo = document.getElementById('hedo-video') as HTMLVideoElement;
+  const soundBtn = document.getElementById('sound-toggle');
+  if (hedoVideo && soundBtn) {
+    const toggleSound = () => {
+      hedoVideo.muted = !hedoVideo.muted;
+      soundBtn.textContent = hedoVideo.muted ? 'sound on' : 'sound off';
+      soundBtn.classList.toggle('active', !hedoVideo.muted);
+    };
+    soundBtn.addEventListener('click', toggleSound);
+    hedoVideo.addEventListener('click', toggleSound);
+  }
 
   // Refresh ScrollTrigger after videos/fonts load to fix position calculations
   window.addEventListener('load', () => {
@@ -1074,6 +1094,59 @@ const description = "Valentine Brasser / Valentin:e Brasser — Multimedia Artis
 
   .why-here-reply :global(a:hover) {
     opacity: 0.6;
+  }
+
+  /* ── HEDO VIDEO ── */
+  .hedo-wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+  }
+
+  .hedo-video {
+    width: 100%;
+    height: auto;
+    display: block;
+    cursor: pointer;
+  }
+
+  .sound-toggle {
+    position: absolute;
+    bottom: 1rem;
+    right: 2.8rem;
+    font-family: 'OfficeCodePro', sans-serif;
+    font-size: 0.7rem;
+    color: #00d2ff;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(0, 210, 255, 0.3);
+    border-radius: 3px;
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .sound-toggle:hover {
+    background: rgba(0, 210, 255, 0.15);
+    border-color: #00d2ff;
+  }
+
+  .sound-toggle.active {
+    background: rgba(0, 210, 255, 0.2);
+    border-color: #00d2ff;
+  }
+
+  @media (max-width: 480px) {
+    .hedo-wrap {
+      padding: 0;
+    }
+    .sound-toggle {
+      bottom: 0.6rem;
+      right: 0.6rem;
+      font-size: 0.65rem;
+    }
   }
 
   /* ── PS MARQUEE ── */
